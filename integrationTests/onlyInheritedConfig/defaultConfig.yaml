@@ -1,0 +1,3 @@
+default_context:
+  project_name: "MyApp"
+  foo: "bar"

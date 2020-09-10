@@ -1,0 +1,4 @@
+This snippet
+should
+
+print

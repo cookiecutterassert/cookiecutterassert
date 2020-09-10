@@ -1,0 +1,15 @@
+assertions:
+  - pathExists MyApp
+  - pathExists MyApp/createVEnv.bat
+  - pathExists MyApp/createVEnv.sh
+  - pathExists MyApp/installRequirements.bat
+  - pathExists MyApp/installRequirements.sh
+  - pathExists MyApp/Procfile
+  - pathExists MyApp/README.md
+  - pathExists MyApp/requirements.txt
+  - pathExists MyApp/runtime.txt
+  - pathExists MyApp/saveRequirements.bat
+  - pathExists MyApp/saveRequirements.sh
+  - pathExists MyApp/app/__init__.py
+  - pathExists MyApp/tests/__init__.py
+  - pathNotExists MyApp/Jenkinsfile

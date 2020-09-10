@@ -1,0 +1,14 @@
+{
+  "project_name": "",
+  "app_name": "",
+  "jenkinsfile": "",
+  "team_name": "",
+  "cd_enabled": "",
+  "pcf_host": "",
+  "pcf_org": "",
+  "pcf_space": "",
+  "pcf_jenkins_creds_id": "",
+  "pcf_route_hostname": "",
+  "dependencies": "",
+  "devDependencies": ""
+}

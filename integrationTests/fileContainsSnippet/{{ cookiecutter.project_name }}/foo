@@ -1,0 +1,13 @@
+Hi, my name is {{ cookiecutter.foo }}
+{% if cookiecutter.foo == "" -%}
+This snippet
+should
+
+not print
+{% endif -%}
+{% if cookiecutter.foo == "bar" -%}
+This snippet
+should
+
+print
+{% endif -%}

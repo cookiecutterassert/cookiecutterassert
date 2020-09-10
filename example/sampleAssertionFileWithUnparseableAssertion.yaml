@@ -1,0 +1,6 @@
+assertions:
+  - pathExists foo.txt
+  - pathExists bin
+  - pathNotExists missingFile
+  - sdjhfs sdhjfgs 6463
+  - fileMatches build.gradle expectedBuild.gradle

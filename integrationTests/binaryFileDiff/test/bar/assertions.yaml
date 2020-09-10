@@ -1,0 +1,2 @@
+assertions:
+  - fileMatches MyApp/image.png image.png

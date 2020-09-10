@@ -1,0 +1,3 @@
+assertions:
+  - fileContainsSnippet MyApp/foo goodSnippet.txt
+  - fileDoesNotContainSnippet MyApp/foo badSnippet.txt

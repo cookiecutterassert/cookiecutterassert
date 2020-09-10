@@ -1,0 +1,3 @@
+assertions:
+  - fileHasMatchingLine MyApp/foo ^Hi, my name is .+$
+  - fileDoesNotHaveMatchingLine MyApp/foo ^my name is .+$

@@ -1,0 +1,3 @@
+assertions:
+  - fileContainsLine MyApp/foo Hi, my name is bar
+  - fileDoesNotContainLine MyApp/foo This line should not print

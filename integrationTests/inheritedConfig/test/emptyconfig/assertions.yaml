@@ -1,0 +1,2 @@
+assertions:
+  - fileContainsLine MyApp/foo foo is bar

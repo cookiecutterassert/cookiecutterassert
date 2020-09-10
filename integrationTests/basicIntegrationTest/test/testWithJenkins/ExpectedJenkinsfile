@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        label 'rt-slave-python-3.7'
+    }
+    environment {
+        PATH = "${workspace}/venv/bin:${env.PATH}"
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        timeout(time: 15, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                container('python') {
+                    sh 'python3 -m venv venv'
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                container('python') {
+                    sh 'flask test'
+                }
+            }
+        }
+    
+    }
+}

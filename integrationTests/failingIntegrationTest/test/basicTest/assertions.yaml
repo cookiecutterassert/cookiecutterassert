@@ -1,0 +1,2 @@
+assertions:
+  - pathExists MyApp/build.gradle

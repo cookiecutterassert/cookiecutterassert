@@ -1,0 +1,13 @@
+default_context:
+  project_name: "MyApp"
+  app_name: "given_app_name"
+  jenkinsfile: "false"
+  team_name: "MyTeam"
+  cd_enabled: "false"
+  pcf_host: ""
+  pcf_org: ""
+  pcf_space: ""
+  pcf_jenkins_creds_id: ""
+  pcf_route_hostname: ""
+  dependencies: ""
+  devDependencies: ""

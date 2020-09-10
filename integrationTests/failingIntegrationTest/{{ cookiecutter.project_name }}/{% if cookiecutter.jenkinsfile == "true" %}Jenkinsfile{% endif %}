@@ -1,0 +1,55 @@
+pipeline {
+    agent {
+        label 'rt-slave-python-3.7'
+    }
+    environment {
+        PATH = "${workspace}/venv/bin:${env.PATH}"
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        timeout(time: 15, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                container('python') {
+                    sh 'python3 -m venv venv'
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                container('python') {
+                    sh 'flask test'
+                }
+            }
+        }
+    {% if cookiecutter.cd_enabled == "true" %}
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '{{ cookiecutter.pcf_jenkins_creds_id }}',
+                                  usernameVariable: 'CF_USER', passwordVariable: 'CF_PASSWORD']]) {
+                    container('cf-cli') {
+                        sh 'cf login -u ${CF_USER} -p ${CF_PASSWORD} -a {{ cookiecutter.pcf_host }} -o {{ cookiecutter.pcf_org }} -s {{ cookiecutter.pcf_space }}'
+                        sh 'cf blue-green-deploy {{ cookiecutter.team_name}}-{{ cookiecutter.project_name }}'
+                        sh 'cf delete {{ cookiecutter.team_name}}-{{ cookiecutter.project_name }}-old -f'
+                    }
+                }
+            }
+            post {
+                always {
+                    container('cf-cli') {
+                        deleteDir()
+                        sh 'cf logout'
+                    }
+                }
+            }
+        }
+     {% endif %}
+    }
+}
