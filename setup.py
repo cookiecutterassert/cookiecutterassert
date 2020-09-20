@@ -26,23 +26,12 @@
 
 import setuptools
 import os.path
+import os
 
-build = 0
-## build.info should be populated with the build number by the CI tool
-## If build tools are changed or build numbers get reset, then increment minor version in
-## major-minor-version-file
-if (os.path.exists("build.info")):
-    with open("build.info", "r") as fh:
-        build = fh.read().strip()
-print("Using build number "+str(build))
+version = os.getenv("TAG_NAME")
+if (version.startswith("v")):
+    version = version[1:]
 
-majorMinorVersion = "0.0"
-if (os.path.exists("major-minor-version-file")):
-    with open("major-minor-version-file", "r") as fh:
-        majorMinorVersion = fh.read().strip()
-print("Using major minor version "+str(build))
-
-version = "{}.{}".format(majorMinorVersion, build)
 print("Creating package for version {}".format(version))
 
 with open("README.md", "r") as fh:

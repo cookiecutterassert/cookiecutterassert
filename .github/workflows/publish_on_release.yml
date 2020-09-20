@@ -28,8 +28,7 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         TAG_NAME:  ${{ github.event.release.tag_name }} 
       run: |
-        echo TAG_NAME is $TAG_NAME
-        echo TAG NAME is ${{ github.event.release.tag_name }}
+        echo Generating PyPi package for TAG_NAME=$TAG_NAME
         python -m pip install --upgrade pip
         ./createVEnv.sh
         source venv/bin/activate
