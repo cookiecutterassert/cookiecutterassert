@@ -31,4 +31,4 @@ jobs:
         source venv/bin/activate
         ./test.sh
         ./createPackage.sh
-        
+        twine upload dist/*
