@@ -28,13 +28,13 @@ As each test scenario executes, you will see `---Starting tests for {SCENARIO FO
 
 
 ## Setting up a cookiecutter assert project
+See [example](https://github.com/cookiecutterassert/cookiecutterassert-example)
+
 Your cookie cutter project should have the following structure
 ```
 templatefolder
-|   build.sh
 |   cookiecutter.json
 |   defaultConfig.yaml
-|   testConfig.yaml
 └───{{ cookiecutter.project_name }}
 |       templatefiles
 |       ...
@@ -57,9 +57,6 @@ templatefolder
 * `build` is where the output from executing `run.sh` goes
 * `cookiecutter.json` is a required file and should have variable names with empty values
 * `defaultConfig.yaml` is default cookie cutter variables across all test cases.  Individual test cases can override the variables completely or partially
-* `testConfig.yaml` is a way to set values to your cookiecutter vairables for local tests using build.sh
-* `build.sh` is used for local testing.  It merges the templates using cookiecutter and the values in testConfig.yaml
-    * If you want to run any scripts on the generated files, you would do it here
 
 ## `test` folder
 Each folder name under test should define a scenario and expected outcome in the folder name
