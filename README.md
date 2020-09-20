@@ -5,6 +5,8 @@ It is a Command Line Interface (cli) tool that will scan a `test` folder in a co
 
 The [Cookie Cutter](https://cookiecutter.readthedocs.io/) template merge tool is a great tool for templating projects
 
+Cookie Cutter Assert was originally developed at Ford Motor Company to facilitate automated testing of Cookie Cutter templates.
+
 ## Installing cookiecutterassert
 
 ### Pre-requisites
