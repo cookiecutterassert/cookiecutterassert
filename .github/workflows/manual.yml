@@ -29,5 +29,6 @@ jobs:
         python -m pip install --upgrade pip
         ./createVEnv.sh
         source venv/bin/activate
-        false
         ./test.sh
+        ./createPackage.sh
+        
