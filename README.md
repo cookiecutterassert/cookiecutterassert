@@ -13,10 +13,12 @@ Cookie Cutter Assert was originally developed at Ford Motor Company to facilitat
 * pipx
   * `brew install pipx`
   * `pipx ensurepath`
-* pipx windows install tbd...
+* pipx windows install
+  * `python3 -m pip install --user pipx`
+  * `python3 -m pipx ensurepath`
 
 ### Install command
-TBD
+`pipx install cookiecutterassert`
 
 ## Executing tests
 go to the root of your cookiecutter project and run `cookiecutterassert`
