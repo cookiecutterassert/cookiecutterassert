@@ -47,5 +47,7 @@ execute_test 0 python runIntegrationTest.py --templatefolder ./integrationTests/
 execute_test 0 python runIntegrationTest.py --templatefolder ./integrationTests/inheritedConfig
 execute_test 0 python runIntegrationTest.py --templatefolder ./integrationTests/onlyInheritedConfig
 execute_test 1 python runIntegrationTest.py --templatefolder ./integrationTests/binaryFileDiff
+execute_test 1 python runIntegrationTest.py --templatefolder ./integrationTests/no-test-warning
+execute_test 1 python runIntegrationTest.py --templatefolder ./integrationTests/no-test-cases-warning
 
 echo "All Integration Tests PASSED!!!!!"

@@ -1,0 +1,4 @@
+Hi, my name is {{ cookiecutter.foo }}
+{% if cookiecutter.foo == "" -%}
+This line should not print
+{% endif -%}
