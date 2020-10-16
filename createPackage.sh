@@ -27,4 +27,4 @@
 rm -rf build
 rm -rf dist
 rm -rf cookiecutterassert.egg-info
-python setup.py sdist bdist_wheel
+pipenv run python setup.py sdist bdist_wheel

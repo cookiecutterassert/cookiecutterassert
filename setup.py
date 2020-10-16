@@ -27,6 +27,8 @@
 import setuptools
 import os.path
 import os
+from pipenv.project import Project
+from pipenv.utils import convert_deps_to_pip
 
 version = os.getenv("TAG_NAME")
 if (version.startswith("v")):
@@ -36,6 +38,9 @@ print("Creating package for version {}".format(version))
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+pfile = Project(chdir=False).parsed_pipfile
+requirements = convert_deps_to_pip(pfile['packages'], r=False)
 
 setuptools.setup(
     name="cookiecutterassert",
@@ -47,11 +52,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/micahtessler/cookiecutterassert",
     packages=setuptools.find_packages(exclude=['test', 'test.*', '*.test.*', 'test.rules']),
-    install_requires=[
-          'Click',
-          'PyYAML',
-          'cookiecutter'
-      ],
+    install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
