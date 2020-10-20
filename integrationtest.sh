@@ -37,6 +37,7 @@ execute_test()
   fi
 }
 
+
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/basicIntegrationTest
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/failingIntegrationTest
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/runScriptSucceeds
@@ -47,5 +48,7 @@ execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/inheritedConfig
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/onlyInheritedConfig
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/binaryFileDiff
+execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/no-test-warning
+execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/no-test-cases-warning
 
 echo "All Integration Tests PASSED!!!!!"
