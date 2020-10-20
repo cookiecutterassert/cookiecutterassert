@@ -24,4 +24,4 @@
 
 # limitations under the License. 
 
-pytest test/
+pipenv run pytest test/
