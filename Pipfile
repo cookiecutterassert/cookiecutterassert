@@ -48,6 +48,7 @@ whichcraft = "*"
 wrapt = "*"
 zipp = "*"
 pipenv = "*"
+secretstorage = "*"
 
 [packages]
 click = "*"
