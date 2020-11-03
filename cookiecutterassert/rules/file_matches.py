@@ -58,8 +58,8 @@ class FileMatchesRule:
     
     def printDifferences(self, outputFile, fixtureFile):
         try:
-            outputLines = rules_util.readLinesFromFile(outputFile)
-            fixtureLines = rules_util.readLinesFromFile(fixtureFile)
+            outputLines = rules_util.readLinesFromFile(outputFile, removeNewline=False)
+            fixtureLines = rules_util.readLinesFromFile(fixtureFile, removeNewline=False)
             i = 0
             for diffLine in difflib.unified_diff(outputLines, fixtureLines, fromfile=outputFile, tofile=fixtureFile):
                 if (i > 2):
@@ -94,7 +94,7 @@ class FileMatchesRule:
         if (VISIBLE_WHITESPACE in self.options and self.options[VISIBLE_WHITESPACE]):
             first_char = diffLine[0:1]
             diff_body = diffLine[1:]
-            updated_body = diff_body.replace(" ", "•").replace("\t","→")
+            updated_body = diff_body.replace(" ", "•").replace("\t","→").replace("\n", "¶")
             return first_char + updated_body
         else:
-            return diffLine
+            return diffLine[0:-1]

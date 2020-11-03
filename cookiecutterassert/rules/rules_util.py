@@ -26,7 +26,7 @@
 
 import os.path
 
-def readLinesFromFile(fileName, folder = None):
+def readLinesFromFile(fileName, folder = None, removeNewline = True):
     fileNameWithPath = fileName
     if (folder != None):
         fileNameWithPath = os.path.join(folder, fileName)
@@ -37,7 +37,7 @@ def readLinesFromFile(fileName, folder = None):
 
     withoutNewlines = []
     for line in fileLines:
-        if line.endswith("\n"):
+        if removeNewline and line.endswith("\n"):
             line = line[0:-1]
         withoutNewlines.append(line)
 

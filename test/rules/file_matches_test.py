@@ -45,7 +45,7 @@ fixtureFileLines = [
 ]
 
 
-def readLinesSideEffect(fileToRead):
+def readLinesSideEffect(fileToRead, removeNewline=True):
     if (fileToRead == fixturePath):
         return fixtureFileLines
     elif (fileToRead == fileName):
@@ -133,8 +133,8 @@ def test_execute_shouldReturnFalseAndNotThrowIfFileDoesNotExist(printMock, filec
 def test_printDifferencesPrintsFileDiff(echoMock, styleMock, diffMock, readLinesMock):
     readLinesMock.side_effect = readLinesSideEffect
     diffLines = [
-        "+ test output line",
-        "- test fixture line"
+        "+ test output line\n",
+        "- test fixture line\n"
     ]
     diffMock.return_value = diffLines
     styleMock.side_effect = styleSideEffect
@@ -153,8 +153,11 @@ def test_printDifferencesPrintsFileDiff(echoMock, styleMock, diffMock, readLines
 def test_printDifferencesPrintsFileDiff(echoMock, styleMock, diffMock, readLinesMock):
     readLinesMock.side_effect = readLinesSideEffect
     diffLines = [
-        "+ test output line",
-        "- test fixture line"
+        "--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces\n",
+        "+++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces\n",
+        "@@ -1,3 +1,3 @@\n",
+        "- test output line\n",
+        "+ test fixture line\n"
     ]
     diffMock.return_value = diffLines
     styleMock.side_effect = styleSideEffect
@@ -163,8 +166,12 @@ def test_printDifferencesPrintsFileDiff(echoMock, styleMock, diffMock, readLines
     fileMatchesRule.printDifferences(fileName, fixturePath)
 
     diffMock.assert_called_once_with(wrongOutputLines, fixtureFileLines, fromfile=fileName, tofile=fixturePath)
-    echoMock.assert_any_call("ANSI STYLED blue:: "+diffLines[0])
-    echoMock.assert_any_call("ANSI STYLED yellow:: "+diffLines[1])
+    echoMock.assert_any_call("ANSI STYLED yellow:: "+diffLines[0])
+    echoMock.assert_any_call("ANSI STYLED blue:: "+diffLines[1])
+    echoMock.assert_any_call(diffLines[2])
+    echoMock.assert_any_call("ANSI STYLED yellow:: "+diffLines[3][0:-1])
+    echoMock.assert_any_call("ANSI STYLED blue:: "+diffLines[4][0:-1])
+
 
 @patch("cookiecutterassert.messager.printError")
 @patch("cookiecutterassert.rules.rules_util.readLinesFromFile")
@@ -183,26 +190,26 @@ def test_printDifferencesHandlesBinary(readLinesMock, printMock):
 def test_printDifferencesPrintsFileDiffWithVisibleWhitepsace(echoMock, styleMock, diffMock, readLinesMock):
     readLinesMock.side_effect = readLinesSideEffect
     diffLines = [
-        "--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces",
-        "+++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces",
-        "@@ -1,3 +1,3 @@",
-        " line with spaces",
-        "-foo is bar",
-        "-foo	is	bar",
-        "+ foo  is  bar  ",
-        "+	foo		is	bar	",
-        " other   line"
+        "--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces\n",
+        "+++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces\n",
+        "@@ -1,3 +1,3 @@\n",
+        " line with spaces\n",
+        "-foo is bar\n",
+        "-foo	is	bar\n",
+        "+ foo  is  bar  \n",
+        "+	foo		is	bar	\n",
+        " other   line\n"
     ]
     diffLinesWithVisisbleSpaces = [
-        "--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces",
-        "+++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces",
-        "@@ -1,3 +1,3 @@",
-        " line•with•spaces",
-        "-foo•is•bar",
-        "-foo→is→bar",
-        "+•foo••is••bar••",
-        "+→foo→→is→bar→",
-        " other•••line"
+        "--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces\n",
+        "+++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces\n",
+        "@@ -1,3 +1,3 @@\n",
+        " line•with•spaces¶",
+        "-foo•is•bar¶",
+        "-foo→is→bar¶",
+        "+•foo••is••bar••¶",
+        "+→foo→→is→bar→¶",
+        " other•••line¶"
     ]
     diffMock.return_value = diffLines
     styleMock.side_effect = styleSideEffect

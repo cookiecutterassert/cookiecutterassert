@@ -7,8 +7,8 @@ assertion fileMatches MyApp/file-with-spaces expected-file-with-spaces failed.  
 
 @@ -1,3 +1,3 @@
 
- line•with•spaces
--foo•is•bar
-+•foo••is••bar••
+ line•with•spaces¶
+-foo•is•bar¶
++•foo••is••bar••¶
  other•••line
 There were failing tests
