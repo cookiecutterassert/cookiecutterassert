@@ -39,19 +39,19 @@ line = "looking for this line"
 
 def test_execute_shouldLookForLineInFileAndReturnTrueIfItDoesNotExists():
     fileName = "example/fileWithoutLine.txt"
-    fileContainsLineRule = FileDoesNotContainLineRule(testFolder, fileName, line)
+    fileContainsLineRule = FileDoesNotContainLineRule({}, testFolder, fileName, line)
     assert fileContainsLineRule.execute(outputFolder)
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldLookForLineInFileAndReturnFalseIfItDoesExist(printMock):
     fileName = "example/fileWithLine.txt"
-    fileContainsLineRule = FileDoesNotContainLineRule(testFolder, fileName, line)
+    fileContainsLineRule = FileDoesNotContainLineRule({}, testFolder, fileName, line)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainLine {0} {1} failed.  Matching line found in {2}/{0}.".format(fileName, line, outputFolder)) 
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
     fileName = "example/aFileThatDoesNotExist"
-    fileContainsLineRule = FileDoesNotContainLineRule(testFolder, fileName, line)
+    fileContainsLineRule = FileDoesNotContainLineRule({}, testFolder, fileName, line)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, line, outputFolder)) 

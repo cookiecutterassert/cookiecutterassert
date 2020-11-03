@@ -31,8 +31,30 @@ execute_test()
   COMMAND=$@
   echo $COMMAND
   $COMMAND
-  if [ $? != $EXPECTED_RESULT ] ; then
-    echo "INTEGRATION TEST FAILED!!!"
+  ACTUAL_RESULT=$?
+  if [ $ACTUAL_RESULT != $EXPECTED_RESULT ] ; then
+    echo "INTEGRATION TEST FAILED!!! expecting result of $EXPECTED_RESULT but got $ACTUAL_RESULT"
+    exit 1
+  fi
+}
+
+execute_test_expected_output()
+{
+  EXPECTED_RESULT=$1
+  shift;
+  FOLDER=$1
+  shift;
+  COMMAND=$@
+  echo $COMMAND
+  $COMMAND  > $FOLDER/actual-cookiecutterassert-output.txt
+  ACTUAL_RESULT=$?
+  if [ $ACTUAL_RESULT != $EXPECTED_RESULT ] ; then
+    echo "INTEGRATION TEST FAILED!!! expecting result of $EXPECTED_RESULT but got $ACTUAL_RESULT"
+    exit 1
+  fi
+  cmp $FOLDER/actual-cookiecutterassert-output.txt $FOLDER/expected-cookiecutterassert-output.txt
+  if [ $? != 0 ] ; then
+    echo "INTEGRATION TEST FAILED DUE TO INCORRECT COMMAND OUTPUT"
     exit 1
   fi
 }
@@ -50,5 +72,6 @@ execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/binaryFileDiff
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/no-test-warning
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/no-test-cases-warning
-
+execute_test_expected_output 1 ./integrationTests/visible-spaces pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-spaces
+execute_test_expected_output 1 ./integrationTests/visible-tabs pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-tabs
 echo "All Integration Tests PASSED!!!!!"

@@ -1,0 +1,14 @@
+Running all tests in ./integrationTests/visible-spaces
+---Starting tests for integrationTests/visible-spaces/test/spaces
+assertion fileMatches MyApp/file-with-spaces expected-file-with-spaces failed.  Files differ
+--- integrationTests/visible-spaces/test/spaces/build/MyApp/file-with-spaces
+
++++ integrationTests/visible-spaces/test/spaces/expected-file-with-spaces
+
+@@ -1,3 +1,3 @@
+
+ line•with•spaces
+-foo•is•bar
++•foo••is••bar••
+ other•••line
+There were failing tests

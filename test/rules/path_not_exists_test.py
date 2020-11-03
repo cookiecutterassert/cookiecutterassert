@@ -35,7 +35,7 @@ def test_execute_shouldReturnFalseIfTHePathExists(printMock, existsMock):
     fileName = "some/test/file"
     outputFolder = "/someoutput/build"
     
-    pathNotExistsRule = PathNotExistsRule("ignore", fileName)
+    pathNotExistsRule = PathNotExistsRule({}, "ignore", fileName)
     assert not pathNotExistsRule.execute(outputFolder)
     os.path.exists.assert_called_once_with(os.path.join(outputFolder, fileName))
     printMock.assert_called_once_with("assertion pathNotExists "+fileName+" failed.  path "+os.path.join(outputFolder, fileName)+" exists")
@@ -46,5 +46,5 @@ def test_execute_shouldReturnTrueIfThePathDoesNotExist(existsMock):
     fileName = "some/test/file"
     outputFolder = "/someoutput/build"
     
-    pathNotExistsRule = PathNotExistsRule("ignore", fileName)
+    pathNotExistsRule = PathNotExistsRule({}, "ignore", fileName)
     assert pathNotExistsRule.execute(outputFolder)

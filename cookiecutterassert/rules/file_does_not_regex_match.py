@@ -31,10 +31,11 @@ from cookiecutterassert import messager
 
 class FileDoesNotRegexMatchRule:
 
-    def __init__(self, testFolder, fileName, regex):
+    def __init__(self, options, testFolder, fileName, regex):
         self.regex = regex
         self.fileName = fileName
         self.testFolder = testFolder
+        self.options = options
 
     def execute(self, outputFolder):
         if (not os.path.exists(os.path.join(outputFolder, self.fileName))):
@@ -52,13 +53,14 @@ class FileDoesNotRegexMatchRule:
         return isinstance(obj, FileDoesNotRegexMatchRule) \
             and obj.regex == self.regex \
             and obj.fileName == self.fileName \
-            and obj.testFolder == self.testFolder
+            and obj.testFolder == self.testFolder \
+            and obj.options == self.options
 
     def __ne__(self, obj):
         return not self == obj
 
     def __str__(self):
-        return "{0}: [testFolder={1}, fileName={2}, regex={3}]".format(type(self).__name__, self.testFolder, self.fileName, self.regex)
+        return "{0}: [testFolder={1}, fileName={2}, regex={3}, options={4}]".format(type(self).__name__, self.testFolder, self.fileName, self.regex, self.options)
 
     def __repr__(self):
         return self.__str__()

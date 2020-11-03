@@ -70,3 +70,4 @@ env.bak/
 venv.bak/
 
 build.info
+integrationTests/*/actual-cookiecutterassert-output.txt

@@ -1,0 +1,4 @@
+options:
+  visible-whitespace: true
+assertions:
+  - fileMatches MyApp/file-with-tabs expected-file-with-tabs

@@ -39,19 +39,19 @@ regex = "^lo+king\\sfor.*$"
 
 def test_execute_shouldLookForMatchingLineInFileAndReturnTrueIfItDoesNotExists():
     fileName = "example/fileWithoutLine.txt"
-    fileContainsLineRule = FileDoesNotRegexMatchRule(testFolder, fileName, regex)
+    fileContainsLineRule = FileDoesNotRegexMatchRule({}, testFolder, fileName, regex)
     assert fileContainsLineRule.execute(outputFolder)
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldLookForMatchingLineInFileAndReturnFalseIfItDoesExist(printMock):
     fileName = "example/fileWithLine.txt"
-    fileContainsLineRule = FileDoesNotRegexMatchRule(testFolder, fileName, regex)
+    fileContainsLineRule = FileDoesNotRegexMatchRule({}, testFolder, fileName, regex)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotHaveMatchingLine {0} {1} failed.  Matching line found in {2}/{0}.".format(fileName, regex, outputFolder)) 
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
     fileName = "example/aFileThatDoesNotExist"
-    fileContainsLineRule = FileDoesNotRegexMatchRule(testFolder, fileName, regex)
+    fileContainsLineRule = FileDoesNotRegexMatchRule({}, testFolder, fileName, regex)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotHaveMatchingLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, regex, outputFolder)) 

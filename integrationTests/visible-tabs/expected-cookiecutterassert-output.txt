@@ -1,0 +1,14 @@
+Running all tests in ./integrationTests/visible-tabs
+---Starting tests for integrationTests/visible-tabs/test/tabs
+assertion fileMatches MyApp/file-with-tabs expected-file-with-tabs failed.  Files differ
+--- integrationTests/visible-tabs/test/tabs/build/MyApp/file-with-tabs
+
++++ integrationTests/visible-tabs/test/tabs/expected-file-with-tabs
+
+@@ -1,3 +1,3 @@
+
+ line→with→tabs
+-foo→is→bar
++→foo→→is→bar→
+ other→→line
+There were failing tests

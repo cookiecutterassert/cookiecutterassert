@@ -30,10 +30,11 @@ from cookiecutterassert import messager
 
 class RunScriptRule:
 
-    def __init__(self, testFolder, runFolder, script):
+    def __init__(self, options, testFolder, runFolder, script):
         self.script = script
         self.runFolder = runFolder
         self.testFolder = testFolder
+        self.options = options
 
     def execute(self, outputFolder):
         workingDir = str(os.path.join(outputFolder, self.runFolder))
@@ -50,13 +51,14 @@ class RunScriptRule:
         return isinstance(obj, RunScriptRule) \
             and obj.script == self.script \
             and obj.runFolder == self.runFolder \
-            and obj.testFolder == self.testFolder
+            and obj.testFolder == self.testFolder \
+            and obj.options == self.options
 
     def __ne__(self, obj):
         return not self == obj
 
     def __str__(self):
-        return "{0}: [testFolder={1}, runFolder={2}, script={3}]".format(type(self).__name__, self.testFolder, self.runFolder, self.script)
+        return "{0}: [testFolder={1}, runFolder={2}, script={3}, options={4}]".format(type(self).__name__, self.testFolder, self.runFolder, self.script, self.options)
 
     def __repr__(self):
         return self.__str__()

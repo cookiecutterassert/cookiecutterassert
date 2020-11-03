@@ -49,42 +49,45 @@ def parseAssertionFile(assertionFile, testFolder):
     rules = []
     with open(assertionFile, 'r') as yamlAssertionFile:
         assertionData = yaml.load(yamlAssertionFile, Loader=yaml.FullLoader)
+        options = {}
+        if ('options' in assertionData):
+            options = assertionData['options']
         for ruleString in assertionData["assertions"]:
             tokens = ruleString.split()
             if (tokens[0] == "pathExists"):
-                rule = PathExistsRule(testFolder, tokens[1])
+                rule = PathExistsRule(options, testFolder, tokens[1])
                 rules.append(rule)
             elif (tokens[0] == "fileMatches"):
-                rule = FileMatchesRule(testFolder, tokens[1], tokens[2])
+                rule = FileMatchesRule(options, testFolder, tokens[1], tokens[2])
                 rules.append(rule)
             elif (tokens[0] == "pathNotExists"):
-                rule = PathNotExistsRule(testFolder, tokens[1])
+                rule = PathNotExistsRule(options, testFolder, tokens[1])
                 rules.append(rule)
             elif (tokens[0] == "runScript"):
                 script = getRestOfLineWithSpacesStartingWithToken(2, tokens, ruleString)
-                rule = RunScriptRule(testFolder, tokens[1], script)
+                rule = RunScriptRule(options, testFolder, tokens[1], script)
                 rules.append(rule)
             elif (tokens[0] == "fileContainsLine"):
                 line = getRestOfLineWithSpacesStartingWithToken(2, tokens, ruleString)
-                rule = FileContainsLineRule(testFolder, tokens[1], line)
+                rule = FileContainsLineRule(options, testFolder, tokens[1], line)
                 rules.append(rule)
             elif (tokens[0] == "fileDoesNotContainLine"):
                 line = getRestOfLineWithSpacesStartingWithToken(2, tokens, ruleString)
-                rule = FileDoesNotContainLineRule(testFolder, tokens[1], line)
+                rule = FileDoesNotContainLineRule(options, testFolder, tokens[1], line)
                 rules.append(rule)
             elif (tokens[0] == "fileHasMatchingLine"):
                 regex = getRestOfLineWithSpacesStartingWithToken(2, tokens, ruleString)
-                rule = FileHasRegexMatchLineRule(testFolder, tokens[1], regex)
+                rule = FileHasRegexMatchLineRule(options, testFolder, tokens[1], regex)
                 rules.append(rule)
             elif (tokens[0] == "fileDoesNotHaveMatchingLine"):
                 regex = getRestOfLineWithSpacesStartingWithToken(2, tokens, ruleString)
-                rule = FileDoesNotRegexMatchRule(testFolder, tokens[1], regex)
+                rule = FileDoesNotRegexMatchRule(options, testFolder, tokens[1], regex)
                 rules.append(rule)
             elif (tokens[0] == "fileContainsSnippet"):
-                rule = FileContainsSnippetRule(testFolder, tokens[1], tokens[2])
+                rule = FileContainsSnippetRule(options, testFolder, tokens[1], tokens[2])
                 rules.append(rule)
             elif (tokens[0] == "fileDoesNotContainSnippet"):
-                rule = FileDoesNotContainSnippetRule(testFolder, tokens[1], tokens[2])
+                rule = FileDoesNotContainSnippetRule(options, testFolder, tokens[1], tokens[2])
                 rules.append(rule)
             else:
                 messager.printError("Unable to parse assertion file {}.  Error on assertion \"{}\"".format(assertionFile, ruleString))

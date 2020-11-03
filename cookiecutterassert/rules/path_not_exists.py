@@ -29,9 +29,10 @@ from cookiecutterassert import messager
 
 class PathNotExistsRule:
 
-    def __init__(self, testFolder, pathName):
+    def __init__(self, options, testFolder, pathName):
         self.pathName = pathName
         self.testFolder = testFolder
+        self.options = options
 
     def execute(self, outputFolder):
         success = not os.path.exists(os.path.join(outputFolder, self.pathName))
@@ -42,13 +43,14 @@ class PathNotExistsRule:
     def __eq__(self, obj):
         return isinstance(obj, PathNotExistsRule) \
             and obj.pathName == self.pathName \
-            and obj.testFolder == self.testFolder
+            and obj.testFolder == self.testFolder \
+            and obj.options == self.options
 
     def __ne__(self, obj):
         return not self == obj
 
     def __str__(self):
-        return "{0}: [testFolder={1}, pathName={2}]".format(type(self).__name__, self.testFolder, self.pathName)
+        return "{0}: [testFolder={1}, pathName={2}, options={3}]".format(type(self).__name__, self.testFolder, self.pathName, self.options)
 
     def __repr__(self):
         return self.__str__()

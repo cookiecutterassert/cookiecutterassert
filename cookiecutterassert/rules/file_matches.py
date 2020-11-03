@@ -31,12 +31,15 @@ from cookiecutterassert.rules import rules_util
 import difflib
 import click
 
+from cookiecutterassert.rules.option_names import VISIBLE_WHITESPACE
+
 class FileMatchesRule:
 
-    def __init__(self, testFolder, fileName, fixturePath):
+    def __init__(self, options, testFolder, fileName, fixturePath):
         self.fileName = fileName
         self.fixturePath = fixturePath
         self.testFolder = testFolder
+        self.options = options
 
     def execute(self, outputFolder):
         fixtureFile = os.path.join(self.testFolder, self.fixturePath)
@@ -57,13 +60,17 @@ class FileMatchesRule:
         try:
             outputLines = rules_util.readLinesFromFile(outputFile)
             fixtureLines = rules_util.readLinesFromFile(fixtureFile)
+            i = 0
             for diffLine in difflib.unified_diff(outputLines, fixtureLines, fromfile=outputFile, tofile=fixtureFile):
+                if (i > 2):
+                    diffLine = self.getVisibleWhitespace(diffLine)
                 styledLine = diffLine
                 if (diffLine.startswith("+")):
                     styledLine = click.style(diffLine, fg='blue')
                 elif (diffLine.startswith("-")):
                     styledLine = click.style(diffLine, fg="yellow")
                 click.echo(styledLine)
+                i = i+1
         except UnicodeDecodeError:
             messager.printError("One or both files are binary, unable to print differences")
 
@@ -71,13 +78,23 @@ class FileMatchesRule:
         return isinstance(obj, FileMatchesRule) \
             and obj.fileName == self.fileName \
             and obj.fixturePath == self.fixturePath \
-            and obj.testFolder == self.testFolder
+            and obj.testFolder == self.testFolder \
+            and obj.options == self.options
 
     def __ne__(self, obj):
         return not self == obj
 
     def __str__(self):
-        return "{0}: [testFolder={1}, fileName={2}, fixturePath={3}]".format(type(self).__name__, self.testFolder, self.fileName, self.fixturePath)
+        return "{0}: [testFolder={1}, fileName={2}, fixturePath={3}, options={4}]".format(type(self).__name__, self.testFolder, self.fileName, self.fixturePath, self.options)
 
     def __repr__(self):
         return self.__str__()
+    
+    def getVisibleWhitespace(self, diffLine):
+        if (VISIBLE_WHITESPACE in self.options and self.options[VISIBLE_WHITESPACE]):
+            first_char = diffLine[0:1]
+            diff_body = diffLine[1:]
+            updated_body = diff_body.replace(" ", "•").replace("\t","→")
+            return first_char + updated_body
+        else:
+            return diffLine
