@@ -31,14 +31,16 @@ def readLinesFromFile(fileName, folder = None, removeNewline = True):
     if (folder != None):
         fileNameWithPath = os.path.join(folder, fileName)
     
-    fileHandle = open(fileNameWithPath, 'r')
-    fileLines = fileHandle.readlines()
+    fileHandle = open(fileNameWithPath, 'rb')
+    myBytes = fileHandle.read()
     fileHandle.close()
+    fileString = myBytes.decode("utf-8")
+    fileLines = fileString.split("\n")
 
     withoutNewlines = []
     for line in fileLines:
-        if removeNewline and line.endswith("\n"):
-            line = line[0:-1]
+        if(not removeNewline and line != fileLines[-1]):
+            line = line+"\n"
         withoutNewlines.append(line)
 
     return withoutNewlines

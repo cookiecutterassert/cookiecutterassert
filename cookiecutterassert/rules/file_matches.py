@@ -94,7 +94,7 @@ class FileMatchesRule:
         if (VISIBLE_WHITESPACE in self.options and self.options[VISIBLE_WHITESPACE]):
             first_char = diffLine[0:1]
             diff_body = diffLine[1:]
-            updated_body = diff_body.replace(" ", "•").replace("\t","→").replace("\n", "¶")
+            updated_body = diff_body.replace(" ", "•").replace("\t","→").replace("\n", "¶").replace("\r", "↵")
             return first_char + updated_body
         else:
             return diffLine[0:-1]

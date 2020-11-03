@@ -74,4 +74,5 @@ execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/no-test-cases-warning
 execute_test_expected_output 1 ./integrationTests/visible-spaces pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-spaces
 execute_test_expected_output 1 ./integrationTests/visible-tabs pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-tabs
+execute_test_expected_output 1 ./integrationTests/visible-crs pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-crs
 echo "All Integration Tests PASSED!!!!!"

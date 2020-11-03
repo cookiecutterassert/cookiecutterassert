@@ -197,7 +197,7 @@ def test_printDifferencesPrintsFileDiffWithVisibleWhitepsace(echoMock, styleMock
         "-foo is bar\n",
         "-foo	is	bar\n",
         "+ foo  is  bar  \n",
-        "+	foo		is	bar	\n",
+        "+	foo		is	bar	\r\n",
         " other   line\n"
     ]
     diffLinesWithVisisbleSpaces = [
@@ -208,7 +208,7 @@ def test_printDifferencesPrintsFileDiffWithVisibleWhitepsace(echoMock, styleMock
         "-foo•is•bar¶",
         "-foo→is→bar¶",
         "+•foo••is••bar••¶",
-        "+→foo→→is→bar→¶",
+        "+→foo→→is→bar→↵¶",
         " other•••line¶"
     ]
     diffMock.return_value = diffLines
