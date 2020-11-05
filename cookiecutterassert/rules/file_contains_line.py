@@ -31,10 +31,11 @@ from cookiecutterassert import messager
 
 class FileContainsLineRule:
 
-    def __init__(self, testFolder, fileName, line):
+    def __init__(self, options, testFolder, fileName, line):
         self.line = line
         self.fileName = fileName
         self.testFolder = testFolder
+        self.options = options
 
     def execute(self, outputFolder):
         if (not os.path.exists(os.path.join(outputFolder, self.fileName))):
@@ -53,13 +54,14 @@ class FileContainsLineRule:
         return isinstance(obj, FileContainsLineRule) \
             and obj.line == self.line \
             and obj.fileName == self.fileName \
-            and obj.testFolder == self.testFolder
+            and obj.testFolder == self.testFolder \
+            and obj.options == self.options
 
     def __ne__(self, obj):
         return not self == obj
 
     def __str__(self):
-        return "{0}: [testFolder={1}, fileName={2}, line={3}]".format(type(self).__name__, self.testFolder, self.fileName, self.line)
+        return "{0}: [testFolder={1}, fileName={2}, line={3}, options={4}]".format(type(self).__name__, self.testFolder, self.fileName, self.line, self.options)
 
     def __repr__(self):
         return self.__str__()

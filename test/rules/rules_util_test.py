@@ -38,3 +38,10 @@ def test_readLinesFromFile_shouldReadLinesFromFile():
 
 def test_readLinesFromFile_shouldReadLinesFromFQPath():
     assert readLinesFromFile("example/fileWithLine.txt") == expectedLines
+
+def test_readLinesFromFile_shouedPreserveNewlinesIfAsked():
+    expectedLinesWithNewlines = []
+    for line in expectedLines:
+        expectedLinesWithNewlines.append(line+"\n")
+    expectedLinesWithNewlines[-1] = expectedLines[-1]
+    assert readLinesFromFile("fileWithLine.txt", folder="example", removeNewline=False) == expectedLinesWithNewlines

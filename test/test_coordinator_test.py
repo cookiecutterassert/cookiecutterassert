@@ -35,6 +35,8 @@ rootTestFolder = rootFolder+'/test'
 testFolderA = rootTestFolder+'/folderA'
 testFolderB = rootTestFolder+'/folderB'
 
+cli_options = {"someoption": True}
+
 @pytest.fixture
 def testFolderSet():
     folderSet = set()
@@ -42,7 +44,7 @@ def testFolderSet():
     folderSet.add(testFolderB)
     return folderSet
 
-def failTestA(templateFolder, testFolder):
+def failTestA(templateFolder, testFolder, cli_options):
     return testFolder != testFolderA
 
 @patch('os.path.isdir')
@@ -53,11 +55,11 @@ def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mockFindAll
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True
 
-    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder)
+    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder, cli_options)
     
     mockFindAllTestFolders.assert_called_with(rootTestFolder)
-    mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderA)
-    mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderB)
+    mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderA, cli_options)
+    mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderB, cli_options)
     assert actualResult == True
 
 @patch('os.path.isdir')
@@ -68,7 +70,7 @@ def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mockFindAllTe
     mockExecuteAllTestsInFolder.side_effect = failTestA
     mockIsDir.return_value = True
 
-    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder)
+    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder, cli_options)
 
     assert actualResult == False
 
@@ -80,11 +82,11 @@ def test_runAllTestsInAllFolders_should_return_false_if_test_folder_does_not_exi
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = False
-    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder)
+    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder, {})
 
     assert actualResult == False
     mockIsDir.assert_called_with(rootTestFolder)
-    mockPrintError.assert_called_with(f'No test folder found, expecting to find one at {rootTestFolder}');
+    mockPrintError.assert_called_with(f'No test folder found, expecting to find one at {rootTestFolder}')
 
 @patch('cookiecutterassert.messager.printError')
 @patch('os.path.isdir')
@@ -94,7 +96,7 @@ def test_runAllTestsInAllFolders_should_return_false_if_no_test_cases(mockFindAl
     mockFindAllTestFolders.return_value = set()
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True
-    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder)
+    actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder, {})
 
     assert actualResult == False
-    mockPrintError.assert_called_with(f'No test cases found. Expecting to find one or more subdirectories in {rootTestFolder} with valid config.yaml and assertions.yaml files');
+    mockPrintError.assert_called_with(f'No test cases found. Expecting to find one or more subdirectories in {rootTestFolder} with valid config.yaml and assertions.yaml files')

@@ -39,23 +39,23 @@ goodSnippetFile = "example/goodSnippet.txt"
 badSnippetFile = "example/badSnippet.txt"
 
 def test_execute_shouldLookForLineInFileAndReturnTrueIfItExists():
-    fileContainsSnippetRule = FileContainsSnippetRule(testFolder, fileName, goodSnippetFile)
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName, goodSnippetFile)
     assert fileContainsSnippetRule.execute(outputFolder)
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldLookForLineInFileAndReturnFalseIfItDoesNotExist(printMock):
-    fileContainsSnippetRule = FileContainsSnippetRule(testFolder, fileName, badSnippetFile)
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName, badSnippetFile)
     assert fileContainsSnippetRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed.  Matching lines from {1} not found in {2}/{0}.".format(fileName, badSnippetFile, outputFolder))
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
-    fileContainsSnippetRule = FileContainsSnippetRule(testFolder, notExistingFileName, goodSnippetFile)
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, notExistingFileName, goodSnippetFile)
     assert fileContainsSnippetRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {0} does not exist in {2}.".format(notExistingFileName, goodSnippetFile, outputFolder)) 
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfSnippetDoesNotExist(printMock):
-    fileContainsSnippetRule = FileContainsSnippetRule(testFolder, fileName, notExistingFileName)
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName, notExistingFileName)
     assert fileContainsSnippetRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {1} does not exist in {2}.".format(fileName, notExistingFileName, testFolder)) 

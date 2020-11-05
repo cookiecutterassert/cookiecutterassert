@@ -29,6 +29,12 @@ The first failed assertion in each folder will print its failure results and the
 As each test scenario executes, you will see `---Starting tests for {SCENARIO FOLDER NAME}`
 
 
+## Command line options
+* `--help` prints a help message
+* `--visible-whitespace` makes common whitespace characters visible in the output of fileMatches rule
+* `-vw` same as --visible-whitespace
+* `--templatefolder` Specifies the location of the cookiecutter project.  defaults to `.`
+
 ## Setting up a cookiecutter assert project
 See [example](https://github.com/cookiecutterassert/cookiecutterassert-example)
 
@@ -117,5 +123,18 @@ assertions:
 * fileDoesNotContainSnippet {generatedFile} {snippetFile}
   * Passes if the generated file does not have all of the lines of the snippet file in order
 
-### Developing cookiecutterassert
+## Assertion file options
+You may put options on the command line or in the assertion file.
+for example:
+```
+options:
+  visible-whitespace: true
+assertions:
+  - fileMatches MyApp/file-with-spaces expected-file-with-spaces
+```
+In this case, the visible-whitespace enabled by default for rules in this assertion file
+
+Assertion file options are always overridden by command line options
+
+## Developing cookiecutterassert
 see [Development guide](Development.md)

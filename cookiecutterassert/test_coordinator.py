@@ -29,7 +29,7 @@ from cookiecutterassert import test_folder_executor
 from cookiecutterassert import messager
 import os
 
-def runAllTestsInAllFolders(projectRootFolder):
+def runAllTestsInAllFolders(projectRootFolder, cli_options):
     rootTestFolder = projectRootFolder+'/test'
     if (not os.path.isdir(rootTestFolder)):
         messager.printError(f'No test folder found, expecting to find one at {rootTestFolder}')
@@ -43,6 +43,6 @@ def runAllTestsInAllFolders(projectRootFolder):
 
     allTestsPass = True
     for folder in testFolders :
-        folderSuccess = test_folder_executor.executeAllTestsInFolder(projectRootFolder, folder)
+        folderSuccess = test_folder_executor.executeAllTestsInFolder(projectRootFolder, folder, cli_options)
         allTestsPass = allTestsPass and folderSuccess
     return allTestsPass

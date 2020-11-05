@@ -1,0 +1,14 @@
+options:
+    visible-whitespace: true
+assertions:
+    - pathExists foo.txt
+    - pathExists bin
+    - pathNotExists missingFile
+    - fileMatches build.gradle expectedBuild.gradle
+    - runScript MyApp ./gradlew clean build
+    - fileContainsLine MyApp/foo this line should exist
+    - fileDoesNotContainLine MyApp/foo this line should not exist
+    - fileHasMatchingLine MyApp/foo ^lo+king \sfor.*$
+    - fileDoesNotHaveMatchingLine MyApp/foo ^lo+king\s[fdfgd]{4} or.*$
+    - fileContainsSnippet MyApp/foo goodSnippet.txt
+    - fileDoesNotContainSnippet MyApp/foo badSnippet.txt

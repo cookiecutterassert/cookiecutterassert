@@ -39,23 +39,23 @@ goodSnippetFile = "example/goodSnippet.txt"
 badSnippetFile = "example/badSnippet.txt"
 
 def test_execute_shouldLookForLineInFileAndReturnTrueIfItExists():
-    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule(testFolder, fileName, badSnippetFile)
+    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule({}, testFolder, fileName, badSnippetFile)
     assert fileDoesNotContainSnippet.execute(outputFolder)
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldLookForLineInFileAndReturnFalseIfItDoesNotExist(printMock):
-    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule(testFolder, fileName, goodSnippetFile)
+    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule({}, testFolder, fileName, goodSnippetFile)
     assert fileDoesNotContainSnippet.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainSnippet {0} {1} failed.  Matching lines from {1} not found in {2}/{0}.".format(fileName, goodSnippetFile, outputFolder))
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
-    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule(testFolder, notExistingFileName, badSnippetFile)
+    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule({}, testFolder, notExistingFileName, badSnippetFile)
     assert fileDoesNotContainSnippet.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainSnippet {0} {1} failed. {0} does not exist in {2}.".format(notExistingFileName, badSnippetFile, outputFolder)) 
 
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfSnippetDoesNotExist(printMock):
-    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule(testFolder, fileName, notExistingFileName)
+    fileDoesNotContainSnippet = FileDoesNotContainSnippetRule({}, testFolder, fileName, notExistingFileName)
     assert fileDoesNotContainSnippet.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainSnippet {0} {1} failed. {1} does not exist in {2}.".format(fileName, notExistingFileName, testFolder)) 

@@ -48,7 +48,7 @@ def test_execute_shouldRunScriptAndReturnTrueIfTheScriptSucceeds(mockPopen):
     mockPopen.return_value = mockProcess
     expectedWorkingDir = str(os.path.join(outputFolder, runFolder))
 
-    runScriptRule = RunScriptRule(testFolder, runFolder, script)
+    runScriptRule = RunScriptRule({}, testFolder, runFolder, script)
     assert runScriptRule.execute(outputFolder)
     mockPopen.assert_called_once_with(script, cwd=expectedWorkingDir, shell=True);
 
@@ -60,7 +60,7 @@ def test_execute_shouldRunScriptAndReturnFalseAndPrintMessageIfTheScriptFails(mo
     expectedWorkingDir = str(os.path.join(outputFolder, runFolder))
     expectedErrorMessage = "assertion runScript {} {} failed.  with non-zero return code [{}]".format(runFolder, script, mockProcess.expectedReturnCode)
 
-    runScriptRule = RunScriptRule(testFolder, runFolder, script)
+    runScriptRule = RunScriptRule({}, testFolder, runFolder, script)
     assert runScriptRule.execute(outputFolder) == False
     mockPopen.assert_called_once_with(script, cwd=expectedWorkingDir, shell=True);
     mockPrint.assert_called_once_with(expectedErrorMessage)
