@@ -75,4 +75,7 @@ execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test_expected_output 1 ./integrationTests/visible-spaces pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-spaces
 execute_test_expected_output 1 ./integrationTests/visible-tabs pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-tabs
 execute_test_expected_output 1 ./integrationTests/visible-crs pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/visible-crs
+execute_test_expected_output 1 ./integrationTests/visible-spaces-cli pipenv run python runIntegrationTest.py --visible-whitespace --templatefolder ./integrationTests/visible-spaces-cli
+execute_test_expected_output 1 ./integrationTests/visible-spaces-cli pipenv run python runIntegrationTest.py -vw --templatefolder ./integrationTests/visible-spaces-cli
+execute_test_expected_output 1 ./integrationTests/invisible-spaces pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/invisible-spaces
 echo "All Integration Tests PASSED!!!!!"

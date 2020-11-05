@@ -35,6 +35,8 @@ from cookiecutterassert import messager
 templateFolder = "templateFolder"
 testFolder = "testFolder"
 
+cli_options = {"someoption": True}
+
 class PassingRule:
     def __init__(self):
         self.executeCount = 0
@@ -79,7 +81,7 @@ def test_executeAllTestsInFolder_shouldGenerateTemplatesToTestBuildFolder(mockGe
     mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     mockGenerateFilesFromTemplate.assert_called_once_with(templateFolder, expectedConfigFile, expectedOutputFolder, expectedDefaultConfigFile)
 
@@ -95,7 +97,7 @@ def test_executeAllTestsInFolder_shouldGenerateTemplatesToTestBuildFolderIfConfi
     mockIsfile.side_effect = isConfigYmlOrAssertionsYml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     mockGenerateFilesFromTemplate.assert_called_once_with(templateFolder, expectedConfigFile, expectedOutputFolder, expectedDefaultConfigFile)
 
@@ -112,9 +114,9 @@ def test_executeAllTestsInFolder_shouldParseAndExecuteRules(mockGenerateFilesFro
     mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
-    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder)
+    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder, cli_options)
     assert actualResult == True
     assert fakeRuleList[0].executeCount == 1
     assert fakeRuleList[0].outputFolder == expectedOutputFolder
@@ -133,9 +135,9 @@ def test_executeAllTestsInFolder_shouldParseAndExecuteRulesFromAssertionsDotYml(
     mockIsfile.side_effect = isConfigYmlOrAssertionsYml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
-    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder)
+    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder, cli_options)
 
 @patch("cookiecutterassert.test_folder_executor.print")
 @patch('cookiecutterassert.assertion_file_parser.parseAssertionFile')
@@ -150,7 +152,7 @@ def test_executeAllTestsInFolder_shouldFailIfARuleFails(mockGenerateFilesFromTem
     fakeRuleList[1] = FailingRule()
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     assert actualResult == False
     assert fakeRuleList[0].executeCount == 1
@@ -169,7 +171,7 @@ def test_executeAllTestsInFolder_shouldBreakOnFirstFailure(mockGenerateFilesFrom
     fakeRuleList[0] = FailingRule()
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     assert actualResult == False
     assert fakeRuleList[0].executeCount == 1
@@ -187,7 +189,7 @@ def test_executeAllTestsInFolder_shouldPrintTestFolderBeingRun(mockGenerateFiles
     mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
     
     printMock.assert_called_once_with("---Starting tests for "+testFolder)
 
@@ -204,7 +206,7 @@ def test_executeAllTestsInFolder_shouldFailIfNoAssertiondsFound(mockGenerateFile
 
     mockAssertionFileParser.return_value = []
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder)
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     assert actualResult == False
     assert fakeRuleList[0].executeCount == 0

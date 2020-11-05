@@ -42,7 +42,6 @@ from cookiecutterassert.rules.option_names import VISIBLE_WHITESPACE
 
 import os.path
 
-
 def test_parseAssertionFile_shouldReturnAssertionRuleArray():
     currentFolder = os.path.dirname(os.path.abspath(__file__))
     testFolder = Path(currentFolder).parent.joinpath("example")
@@ -61,7 +60,7 @@ def test_parseAssertionFile_shouldReturnAssertionRuleArray():
     expectedRules.append(FileContainsSnippetRule({}, str(testFolder), "MyApp/foo", "goodSnippet.txt"))
     expectedRules.append(FileDoesNotContainSnippetRule({}, str(testFolder), "MyApp/foo", "badSnippet.txt"))
 
-    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder))
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), {})
 
     assert expectedRules == actualRules
 
@@ -74,7 +73,7 @@ def test_parseAssertionFile_shouldReturnNullAndPrintMessageIfBadRule(printErrorM
     expectedRules = []
     expectedErrorMessage = "Unable to parse assertion file {}.  Error on assertion \"sdjhfs sdhjfgs 6463\"".format(str(assertionFile))
     
-    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder))
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), {})
 
     assert expectedRules == actualRules
     printErrorMock.assert_called_once_with(expectedErrorMessage)
@@ -86,7 +85,7 @@ def test_getRestOfLineWithSpacesStartingWithToken_shouldGetRestOfLineWithSpaces(
     actual = assertion_file_parser.getRestOfLineWithSpacesStartingWithToken(2, tokens, inputLine)
     assert actual == expected
 
-def test_parseAssertionFile_shouldReturnAssertionRuleArray():
+def test_parseAssertionFile_shouldReturnAssertionRuleArray_with_assertionFileOptions():
     currentFolder = os.path.dirname(os.path.abspath(__file__))
     testFolder = Path(currentFolder).parent.joinpath("example")
     assertionFile = testFolder.joinpath("sampleAssertionFileWithVisibleWhitespace.yaml")
@@ -105,6 +104,52 @@ def test_parseAssertionFile_shouldReturnAssertionRuleArray():
     expectedRules.append(FileContainsSnippetRule(options, str(testFolder), "MyApp/foo", "goodSnippet.txt"))
     expectedRules.append(FileDoesNotContainSnippetRule(options, str(testFolder), "MyApp/foo", "badSnippet.txt"))
 
-    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder))
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), {})
+
+    assert expectedRules == actualRules
+
+def test_parseAssertionFile_shouldReturnAssertionRuleArray_withCliOptions():
+    currentFolder = os.path.dirname(os.path.abspath(__file__))
+    testFolder = Path(currentFolder).parent.joinpath("example")
+    assertionFile = testFolder.joinpath("sampleAssertionFile.yaml")
+    cli_options = {VISIBLE_WHITESPACE : True}
+
+    expectedRules = []
+    expectedRules.append(PathExistsRule(cli_options, str(testFolder), "foo.txt"))
+    expectedRules.append(PathExistsRule(cli_options, str(testFolder), "bin"))
+    expectedRules.append(PathNotExistsRule(cli_options, str(testFolder), "missingFile"))
+    expectedRules.append(FileMatchesRule(cli_options, str(testFolder), "build.gradle", "expectedBuild.gradle"))
+    expectedRules.append(RunScriptRule(cli_options, str(testFolder), "MyApp", "./gradlew clean build"))
+    expectedRules.append(FileContainsLineRule(cli_options, str(testFolder), "MyApp/foo", "this line should exist"))
+    expectedRules.append(FileDoesNotContainLineRule(cli_options, str(testFolder), "MyApp/foo", "this line should not exist"))
+    expectedRules.append(FileHasRegexMatchLineRule(cli_options, str(testFolder), "MyApp/foo", "^lo+king \\sfor.*$"))
+    expectedRules.append(FileDoesNotRegexMatchRule(cli_options, str(testFolder), "MyApp/foo", "^lo+king\\s[fdfgd]{4} or.*$"))
+    expectedRules.append(FileContainsSnippetRule(cli_options, str(testFolder), "MyApp/foo", "goodSnippet.txt"))
+    expectedRules.append(FileDoesNotContainSnippetRule(cli_options, str(testFolder), "MyApp/foo", "badSnippet.txt"))
+
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), cli_options)
+
+    assert expectedRules == actualRules
+
+def test_parseAssertionFile_clie_options_should_override_assertion_file():
+    currentFolder = os.path.dirname(os.path.abspath(__file__))
+    testFolder = Path(currentFolder).parent.joinpath("example")
+    assertionFile = testFolder.joinpath("sampleAssertionFileWithVisibleWhitespace.yaml")
+    cli_options = {VISIBLE_WHITESPACE : False} #opposite of what's in yaml file
+
+    expectedRules = []
+    expectedRules.append(PathExistsRule(cli_options, str(testFolder), "foo.txt"))
+    expectedRules.append(PathExistsRule(cli_options, str(testFolder), "bin"))
+    expectedRules.append(PathNotExistsRule(cli_options, str(testFolder), "missingFile"))
+    expectedRules.append(FileMatchesRule(cli_options, str(testFolder), "build.gradle", "expectedBuild.gradle"))
+    expectedRules.append(RunScriptRule(cli_options, str(testFolder), "MyApp", "./gradlew clean build"))
+    expectedRules.append(FileContainsLineRule(cli_options, str(testFolder), "MyApp/foo", "this line should exist"))
+    expectedRules.append(FileDoesNotContainLineRule(cli_options, str(testFolder), "MyApp/foo", "this line should not exist"))
+    expectedRules.append(FileHasRegexMatchLineRule(cli_options, str(testFolder), "MyApp/foo", "^lo+king \\sfor.*$"))
+    expectedRules.append(FileDoesNotRegexMatchRule(cli_options, str(testFolder), "MyApp/foo", "^lo+king\\s[fdfgd]{4} or.*$"))
+    expectedRules.append(FileContainsSnippetRule(cli_options, str(testFolder), "MyApp/foo", "goodSnippet.txt"))
+    expectedRules.append(FileDoesNotContainSnippetRule(cli_options, str(testFolder), "MyApp/foo", "badSnippet.txt"))
+
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), cli_options)
 
     assert expectedRules == actualRules

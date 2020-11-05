@@ -47,7 +47,7 @@ def getAssertionsFile(testFolder):
         assertionsFile = testFolder+"/assertions.yml"
     return assertionsFile
 
-def executeAllTestsInFolder(templateFolder, testFolder):
+def executeAllTestsInFolder(templateFolder, testFolder, cli_options):
     messager.printMessage("---Starting tests for "+testFolder)
     outputFolder = testFolder+"/build"
     configFile = getConfigFile(testFolder)
@@ -55,7 +55,7 @@ def executeAllTestsInFolder(templateFolder, testFolder):
     assertionsFile = getAssertionsFile(testFolder)
     cookie_cutter_interface.generateFilesFromTemplate(templateFolder, configFile, outputFolder, defaultConfigFile)
     
-    rules = assertion_file_parser.parseAssertionFile(assertionsFile, testFolder)
+    rules = assertion_file_parser.parseAssertionFile(assertionsFile, testFolder, cli_options)
     if (len(rules) == 0):
         messager.printError("ERROR: No assertions found in test folder: {}".format(testFolder))
         return False

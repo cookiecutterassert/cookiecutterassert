@@ -97,4 +97,4 @@ class FileMatchesRule:
             updated_body = diff_body.replace(" ", "•").replace("\t","→").replace("\n", "¶").replace("\r", "↵")
             return first_char + updated_body
         else:
-            return diffLine[0:-1]
+            return  diffLine.replace("\n", "")

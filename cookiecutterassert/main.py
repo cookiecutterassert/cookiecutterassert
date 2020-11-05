@@ -29,16 +29,18 @@ from cookiecutterassert import test_coordinator
 import traceback
 import sys
 from cookiecutterassert.messager import printError, printMessage, printSuccess
+from cookiecutterassert.options_parser import create_cli_options
 
 @click.command()
 @click.option('--templatefolder', default='.', help='path of cookiecutter project directory, defaults to .')
-
-def runAllTests(templatefolder):
+@click.option('-vw',"--visible-whitespace", is_flag=True, default=False, help='make whitespace visble with symbols in place of common whitespace characters')
+def runAllTests(templatefolder, visible_whitespace):
     """Runs all test folders in the test directory"""
     success = True
+    cli_options = create_cli_options(visible_whitespace)
     try :
         printMessage('Running all tests in %s' % templatefolder)
-        success = test_coordinator.runAllTestsInAllFolders(templatefolder)
+        success = test_coordinator.runAllTestsInAllFolders(templatefolder, cli_options)
     except:
         printError(traceback.format_exc())
         sys.exit(-1)

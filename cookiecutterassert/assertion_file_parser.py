@@ -45,13 +45,14 @@ def getRestOfLineWithSpacesStartingWithToken(startTokenIndex, tokens, line):
     charIndex = line.index(tokens[startTokenIndex], charIndex)
     return line[charIndex:]
 
-def parseAssertionFile(assertionFile, testFolder):
+def parseAssertionFile(assertionFile, testFolder, cli_options):
     rules = []
     with open(assertionFile, 'r') as yamlAssertionFile:
         assertionData = yaml.load(yamlAssertionFile, Loader=yaml.FullLoader)
         options = {}
         if ('options' in assertionData):
             options = assertionData['options']
+        options.update(cli_options)
         for ruleString in assertionData["assertions"]:
             tokens = ruleString.split()
             if (tokens[0] == "pathExists"):
