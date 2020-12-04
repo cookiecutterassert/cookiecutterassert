@@ -1,0 +1,3 @@
+assertions:
+  - pathExists MyApp/foo
+  - pathNotExists MyApp/Foo

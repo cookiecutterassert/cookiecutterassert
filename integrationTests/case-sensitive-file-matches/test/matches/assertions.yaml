@@ -1,0 +1,2 @@
+assertions:
+  - fileMatches MyApp/FOO expectedFoo

@@ -24,7 +24,9 @@
 
 # limitations under the License. 
 
+from genericpath import exists
 import os.path
+from pathlib import Path
 
 def readLinesFromFile(fileName, folder = None, removeNewline = True):
     fileNameWithPath = fileName
@@ -52,3 +54,25 @@ def snippetExistsInFile(snippetLines, fileLines):
         if fileLines[i:i+len(snippetLines)] == snippetLines:
             return True
     return False
+
+def path_exists_case_sensitive(path, parent_path = ""):
+    if (parent_path != ""):
+        fullOSPath = os.path.join(parent_path, path)
+    else:
+        fullOSPath  = path
+        
+    fullPath = Path(fullOSPath)
+    if (not fullPath.exists()):
+        return False
+        
+    currentPath = fullPath.resolve()
+    i = 0
+    while (currentPath != currentPath.parent):
+        found = False
+        for child in currentPath.parent.iterdir():
+            if (child.name == currentPath.name):
+                found = True
+        if (not found):
+            return False
+        currentPath = currentPath.parent
+    return True

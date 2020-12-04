@@ -26,6 +26,7 @@
 
 import os.path
 from cookiecutterassert import messager
+from cookiecutterassert.rules import rules_util
 
 class PathNotExistsRule:
 
@@ -35,7 +36,7 @@ class PathNotExistsRule:
         self.options = options
 
     def execute(self, outputFolder):
-        success = not os.path.exists(os.path.join(outputFolder, self.pathName))
+        success = not rules_util.path_exists_case_sensitive(self.pathName, parent_path=outputFolder)
         if (not success):
             messager.printError("assertion pathNotExists "+self.pathName+" failed.  path "+os.path.join(outputFolder, self.pathName)+" exists")
         return success

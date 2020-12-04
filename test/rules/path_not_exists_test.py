@@ -28,7 +28,7 @@ from cookiecutterassert.rules.path_not_exists import PathNotExistsRule
 from unittest.mock import patch
 import os.path
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldReturnFalseIfTHePathExists(printMock, existsMock):
     existsMock.return_value=True;
@@ -37,10 +37,10 @@ def test_execute_shouldReturnFalseIfTHePathExists(printMock, existsMock):
     
     pathNotExistsRule = PathNotExistsRule({}, "ignore", fileName)
     assert not pathNotExistsRule.execute(outputFolder)
-    os.path.exists.assert_called_once_with(os.path.join(outputFolder, fileName))
+    existsMock.assert_called_once_with(fileName, parent_path=outputFolder)
     printMock.assert_called_once_with("assertion pathNotExists "+fileName+" failed.  path "+os.path.join(outputFolder, fileName)+" exists")
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 def test_execute_shouldReturnTrueIfThePathDoesNotExist(existsMock):
     existsMock.return_value=False;
     fileName = "some/test/file"
@@ -48,3 +48,5 @@ def test_execute_shouldReturnTrueIfThePathDoesNotExist(existsMock):
     
     pathNotExistsRule = PathNotExistsRule({}, "ignore", fileName)
     assert pathNotExistsRule.execute(outputFolder)
+
+    
