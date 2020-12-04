@@ -26,8 +26,6 @@
 
 from cookiecutterassert.rules.file_matches import FileMatchesRule
 from unittest.mock import patch, MagicMock
-from cookiecutterassert.rules import rules_util
-import filecmp
 import os.path
 from cookiecutterassert.rules.option_names import VISIBLE_WHITESPACE
 
@@ -74,7 +72,7 @@ def fileNameDoesNotExist(path):
     return path != os.path.join(outputFolder, fileName)
 
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 @patch("filecmp.cmp")
 def test_execute_shouldReturnTrueIfTheFilesMatch(filecmpMock, pathExistsMock):
     pathExistsMock.return_value = True
@@ -86,7 +84,7 @@ def test_execute_shouldReturnTrueIfTheFilesMatch(filecmpMock, pathExistsMock):
         outputFolder, fileName), os.path.join(testFolder, fixturePath), shallow=False)
 
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 @patch("filecmp.cmp")
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldReturnFalseIfTheFilesDoNotMatch(printMock, filecmpMock, pathExistsMock):
@@ -100,7 +98,7 @@ def test_execute_shouldReturnFalseIfTheFilesDoNotMatch(printMock, filecmpMock, p
         "assertion fileMatches " + fileName+" "+fixturePath + " failed.  Files differ")
 
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 @patch("filecmp.cmp")
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldReturnFalseAndNotThrowIfFixtureDoesNotExist(printMock, filecmpMock, pathExistsMock):
@@ -113,7 +111,7 @@ def test_execute_shouldReturnFalseAndNotThrowIfFixtureDoesNotExist(printMock, fi
                                       " failed.  "+os.path.abspath(os.path.join(testFolder, fixturePath))+" does not exist")
 
 
-@patch("os.path.exists")
+@patch("cookiecutterassert.rules.rules_util.path_exists_case_sensitive")
 @patch("filecmp.cmp")
 @patch("cookiecutterassert.messager.printError")
 def test_execute_shouldReturnFalseAndNotThrowIfFileDoesNotExist(printMock, filecmpMock, pathExistsMock):

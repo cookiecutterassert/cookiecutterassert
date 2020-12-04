@@ -78,4 +78,6 @@ execute_test_expected_output 1 ./integrationTests/visible-crs pipenv run python 
 execute_test_expected_output 1 ./integrationTests/visible-spaces-cli pipenv run python runIntegrationTest.py --visible-whitespace --templatefolder ./integrationTests/visible-spaces-cli
 execute_test_expected_output 1 ./integrationTests/visible-spaces-cli pipenv run python runIntegrationTest.py -vw --templatefolder ./integrationTests/visible-spaces-cli
 execute_test_expected_output 1 ./integrationTests/invisible-spaces pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/invisible-spaces
+execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/case-sensitive-file-names
+execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/case-sensitive-file-matches
 echo "All Integration Tests PASSED!!!!!"

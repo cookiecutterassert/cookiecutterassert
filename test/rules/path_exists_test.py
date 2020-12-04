@@ -24,6 +24,7 @@
 
 # limitations under the License. 
 
+from os import error
 from cookiecutterassert.rules.path_exists import PathExistsRule
 from unittest.mock import patch
 import os.path

@@ -24,7 +24,7 @@
 
 # limitations under the License. 
 
-from cookiecutterassert.rules.rules_util import readLinesFromFile, snippetExistsInFile
+from cookiecutterassert.rules.rules_util import readLinesFromFile, snippetExistsInFile, path_exists_case_sensitive
 from cookiecutterassert import messager
 import os
 
@@ -37,10 +37,10 @@ class FileDoesNotContainSnippetRule:
         self.options = options
 
     def execute(self, outputFolder):
-        if (not os.path.exists(os.path.join(outputFolder, self.fileName))):
+        if (not path_exists_case_sensitive(self.fileName, parent_path=outputFolder)):
             messager.printError("assertion fileDoesNotContainSnippet {0} {1} failed. {0} does not exist in {2}.".format(self.fileName, self.snippetFile, outputFolder))
             return False
-        if (not os.path.exists(os.path.join(self.testFolder, self.snippetFile))):
+        if (not path_exists_case_sensitive(self.snippetFile, parent_path=self.testFolder)):
             messager.printError("assertion fileDoesNotContainSnippet {0} {1} failed. {1} does not exist in {2}.".format(self.fileName, self.snippetFile, self.testFolder))
             return False
         fileLines = readLinesFromFile(self.fileName, folder=outputFolder)

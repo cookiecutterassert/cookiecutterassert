@@ -54,3 +54,10 @@ def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
     fileContainsLineRule = FileHasRegexMatchLineRule({}, testFolder, fileName, regex)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileHasMatchingLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, regex, outputFolder)) 
+
+@patch("cookiecutterassert.messager.printError")
+def test_execute_shouldFailAndPrintIfFileDoesNotExist_case_sensitive(printMock):
+    fileName = "example/fileWithline.txt"
+    fileContainsLineRule = FileHasRegexMatchLineRule({}, testFolder, fileName, regex)
+    assert fileContainsLineRule.execute(outputFolder) == False
+    printMock.assert_called_once_with("assertion fileHasMatchingLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, regex, outputFolder)) 

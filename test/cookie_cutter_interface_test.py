@@ -25,13 +25,8 @@
 # limitations under the License. 
 
 from cookiecutterassert import cookie_cutter_interface
-import pytest
 from unittest.mock import patch
 from unittest.mock import mock_open
-import yaml
-import shutil
-import os
-import os.path
 from cookiecutter.generate import generate_files
 
 fakeTemplate = 'template'

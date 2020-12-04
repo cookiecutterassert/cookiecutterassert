@@ -55,3 +55,11 @@ def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
     fileContainsLineRule = FileDoesNotContainLineRule({}, testFolder, fileName, line)
     assert fileContainsLineRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileDoesNotContainLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, line, outputFolder)) 
+
+@patch("cookiecutterassert.messager.printError")
+def test_execute_shouldFailAndPrintIfFileDoesNotExist_case_sensitive(printMock):
+    fileName = "example/fileWithoutline.txt"
+    fileContainsLineRule = FileDoesNotContainLineRule({}, testFolder, fileName, line)
+    assert fileContainsLineRule.execute(outputFolder) == False
+    printMock.assert_called_once_with("assertion fileDoesNotContainLine {0} {1} failed. {0} does not exist in {2}.".format(fileName, line, outputFolder)) 
+

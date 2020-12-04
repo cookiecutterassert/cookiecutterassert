@@ -25,7 +25,7 @@
 # limitations under the License. 
 
 import os.path
-from cookiecutterassert.rules.rules_util import readLinesFromFile
+from cookiecutterassert.rules.rules_util import readLinesFromFile, path_exists_case_sensitive
 from cookiecutterassert import messager
 
 class FileDoesNotContainLineRule:
@@ -37,7 +37,7 @@ class FileDoesNotContainLineRule:
         self.options = options
 
     def execute(self, outputFolder):
-        if (not os.path.exists(os.path.join(outputFolder, self.fileName))):
+        if (not path_exists_case_sensitive(self.fileName, parent_path=outputFolder)):
             messager.printError("assertion fileDoesNotContainLine {0} {1} failed. {0} does not exist in {2}.".format(self.fileName, self.line, outputFolder))
             return False
         

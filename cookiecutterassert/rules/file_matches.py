@@ -44,10 +44,10 @@ class FileMatchesRule:
     def execute(self, outputFolder):
         fixtureFile = os.path.join(self.testFolder, self.fixturePath)
         outputFile = os.path.join(outputFolder, self.fileName)
-        if (not os.path.exists(fixtureFile)):
+        if (not rules_util.path_exists_case_sensitive(fixtureFile)):
             messager.printError("assertion fileMatches "+ self.fileName+" "+self.fixturePath +" failed.  "+os.path.abspath(os.path.join(self.testFolder, self.fixturePath))+" does not exist")
             return False
-        if (not os.path.exists(outputFile)):
+        if (not rules_util.path_exists_case_sensitive(outputFile)):
             messager.printError("assertion fileMatches "+ self.fileName+" "+self.fixturePath +" failed.  "+os.path.abspath(os.path.join(outputFolder, self.fileName))+" does not exist")
             return False
         success = filecmp.cmp(outputFile, fixtureFile, shallow=False)

@@ -55,7 +55,21 @@ def test_execute_shouldFailAndPrintIfFileDoesNotExist(printMock):
     printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {0} does not exist in {2}.".format(notExistingFileName, goodSnippetFile, outputFolder)) 
 
 @patch("cookiecutterassert.messager.printError")
+def test_execute_shouldFailAndPrintIfFileDoesNotExist_case_sensitive(printMock):
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName.upper(), goodSnippetFile)
+    assert fileContainsSnippetRule.execute(outputFolder) == False
+    printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {0} does not exist in {2}.".format(fileName.upper(), goodSnippetFile, outputFolder)) 
+
+
+@patch("cookiecutterassert.messager.printError")
 def test_execute_shouldFailAndPrintIfSnippetDoesNotExist(printMock):
     fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName, notExistingFileName)
     assert fileContainsSnippetRule.execute(outputFolder) == False
     printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {1} does not exist in {2}.".format(fileName, notExistingFileName, testFolder)) 
+
+@patch("cookiecutterassert.messager.printError")
+def test_execute_shouldFailAndPrintIfSnippetDoesNotExist_case_sensitive(printMock):
+    fileContainsSnippetRule = FileContainsSnippetRule({}, testFolder, fileName, goodSnippetFile.upper())
+    assert fileContainsSnippetRule.execute(outputFolder) == False
+    printMock.assert_called_once_with("assertion fileContainsSnippet {0} {1} failed. {1} does not exist in {2}.".format(fileName, goodSnippetFile.upper(), testFolder)) 
+
