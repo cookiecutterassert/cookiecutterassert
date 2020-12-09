@@ -50,7 +50,8 @@ def failTestA(templateFolder, testFolder, cli_options):
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
-def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+@patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
+def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True
@@ -60,12 +61,14 @@ def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mockFindAll
     mockFindAllTestFolders.assert_called_with(rootTestFolder)
     mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderA, cli_options)
     mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderB, cli_options)
+    mock_delete_stale_test_folders.assert_called_once_with(rootTestFolder)
     assert actualResult == True
 
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
-def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+@patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
+def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.side_effect = failTestA
     mockIsDir.return_value = True
@@ -78,7 +81,8 @@ def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mockFindAllTe
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
-def test_runAllTestsInAllFolders_should_return_false_if_test_folder_does_not_exist(mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, mockPrintError, testFolderSet):
+@patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
+def test_runAllTestsInAllFolders_should_return_false_if_test_folder_does_not_exist(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, mockPrintError, testFolderSet):
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = False
@@ -92,7 +96,8 @@ def test_runAllTestsInAllFolders_should_return_false_if_test_folder_does_not_exi
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
-def test_runAllTestsInAllFolders_should_return_false_if_no_test_cases(mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, mockPrintError, testFolderSet):
+@patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
+def test_runAllTestsInAllFolders_should_return_false_if_no_test_cases(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, mockPrintError, testFolderSet):
     mockFindAllTestFolders.return_value = set()
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True

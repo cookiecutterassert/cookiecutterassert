@@ -28,6 +28,7 @@ from cookiecutterassert import folder_scanner
 from cookiecutterassert import test_folder_executor
 from cookiecutterassert import messager
 import os
+from cookiecutterassert import stale_test_folder_cleanup
 
 def runAllTestsInAllFolders(projectRootFolder, cli_options):
     rootTestFolder = projectRootFolder+'/test'
@@ -45,4 +46,7 @@ def runAllTestsInAllFolders(projectRootFolder, cli_options):
     for folder in testFolders :
         folderSuccess = test_folder_executor.executeAllTestsInFolder(projectRootFolder, folder, cli_options)
         allTestsPass = allTestsPass and folderSuccess
+    
+    stale_test_folder_cleanup.delete_stale_test_folders(rootTestFolder)
+    
     return allTestsPass
