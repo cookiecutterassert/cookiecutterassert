@@ -31,6 +31,7 @@ import os.path
 from unittest.mock import patch
 import pytest
 from cookiecutterassert import messager
+from cookiecutterassert.rules.option_names import IGNORE
 
 templateFolder = "templateFolder"
 testFolder = "testFolder"
@@ -38,8 +39,9 @@ testFolder = "testFolder"
 cli_options = {"someoption": True}
 
 class PassingRule:
-    def __init__(self):
+    def __init__(self, options):
         self.executeCount = 0
+        self.options = options
         self.outputFolder = ""
     
     def execute(self, outputFolder):
@@ -48,8 +50,9 @@ class PassingRule:
         return True
 
 class FailingRule:
-    def __init__(self):
+    def __init__(self, options):
         self.executeCount = 0
+        self.options = options
         self.outputFolder = ""
     
     def execute(self, outputFolder):
@@ -66,8 +69,22 @@ def isConfigYamlOrAssertionsYaml(fileName):
 @pytest.fixture
 def fakeRuleList():
     return [
-        PassingRule(),
-        PassingRule()
+        PassingRule({}),
+        PassingRule({})
+    ]
+
+@pytest.fixture
+def ignoreTrueRuleList():
+    return [
+        PassingRule({IGNORE: True}),
+        PassingRule({IGNORE: True})
+    ]
+
+@pytest.fixture
+def ignoreFalseRuleList():
+    return [
+        PassingRule({IGNORE: False}),
+        PassingRule({IGNORE: False})
     ]
 
 @patch("cookiecutterassert.test_folder_executor.print")
@@ -130,12 +147,11 @@ def test_executeAllTestsInFolder_shouldParseAndExecuteRules(mockGenerateFilesFro
 def test_executeAllTestsInFolder_shouldParseAndExecuteRulesFromAssertionsDotYml(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, fakeRuleList):
     templateFolder = "templateFolder"
     testFolder = "testFolder"
-    expectedOutputFolder = testFolder+"/build"
     expectedAssertionFile = testFolder+"/assertions.yml"
     mockIsfile.side_effect = isConfigYmlOrAssertionsYml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
+    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
 
     mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder, cli_options)
 
@@ -146,10 +162,8 @@ def test_executeAllTestsInFolder_shouldParseAndExecuteRulesFromAssertionsDotYml(
 def test_executeAllTestsInFolder_shouldFailIfARuleFails(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, fakeRuleList):
     templateFolder = "templateFolder"
     testFolder = "testFolder"
-    expectedOutputFolder = testFolder+"/build"
-    expectedAssertionFile = testFolder+"/assertions.yml"
     mockIsfile.side_effect = isConfigYmlOrAssertionsYml
-    fakeRuleList[1] = FailingRule()
+    fakeRuleList[1] = FailingRule({})
     mockAssertionFileParser.return_value = fakeRuleList
 
     actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
@@ -165,10 +179,8 @@ def test_executeAllTestsInFolder_shouldFailIfARuleFails(mockGenerateFilesFromTem
 def test_executeAllTestsInFolder_shouldBreakOnFirstFailure(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, fakeRuleList):
     templateFolder = "templateFolder"
     testFolder = "testFolder"
-    expectedOutputFolder = testFolder+"/build"
-    expectedAssertionFile = testFolder+"/assertions.yml"
     mockIsfile.side_effect = isConfigYmlOrAssertionsYml
-    fakeRuleList[0] = FailingRule()
+    fakeRuleList[0] = FailingRule({})
     mockAssertionFileParser.return_value = fakeRuleList
 
     actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
@@ -184,12 +196,10 @@ def test_executeAllTestsInFolder_shouldBreakOnFirstFailure(mockGenerateFilesFrom
 def test_executeAllTestsInFolder_shouldPrintTestFolderBeingRun(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, fakeRuleList):
     templateFolder = "templateFolder"
     testFolder = "testFolder"
-    expectedOutputFolder = testFolder+"/build"
-    expectedAssertionFile = testFolder+"/assertions.yaml"
     mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
     mockAssertionFileParser.return_value = fakeRuleList
 
-    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
+    test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
     
     printMock.assert_called_once_with("---Starting tests for "+testFolder)
 
@@ -200,8 +210,6 @@ def test_executeAllTestsInFolder_shouldPrintTestFolderBeingRun(mockGenerateFiles
 def test_executeAllTestsInFolder_shouldFailIfNoAssertiondsFound(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, fakeRuleList):
     templateFolder = "templateFolder"
     testFolder = "testFolder"
-    expectedOutputFolder = testFolder+"/build"
-    expectedAssertionFile = testFolder+"/assertions.yaml"
     mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
 
     mockAssertionFileParser.return_value = []
@@ -212,3 +220,44 @@ def test_executeAllTestsInFolder_shouldFailIfNoAssertiondsFound(mockGenerateFile
     assert fakeRuleList[0].executeCount == 0
     assert fakeRuleList[1].executeCount == 0
     printMock.assert_called_with("ERROR: No assertions found in test folder: {}".format(testFolder))
+
+@patch("cookiecutterassert.messager.printMessage")
+@patch('cookiecutterassert.assertion_file_parser.parseAssertionFile')
+@patch('os.path.isfile')
+@patch('cookiecutterassert.cookie_cutter_interface.generateFilesFromTemplate')
+def test_executeAllTestsInFolder_shouldSkipRulesAndSucceedIfIgnoreIsTrue(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, ignoreTrueRuleList):
+    templateFolder = "templateFolder"
+    testFolder = "testFolder"
+    expectedAssertionFile = testFolder+"/assertions.yaml"
+    mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
+    mockAssertionFileParser.return_value = ignoreTrueRuleList
+
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
+
+    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder, cli_options)
+    assert actualResult == True
+    assert ignoreTrueRuleList[0].executeCount == 0
+    assert ignoreTrueRuleList[1].executeCount == 0
+    mockGenerateFilesFromTemplate.assert_not_called()
+    printMock.assert_called_with('Skipping folder because ignore=true in assertion file options')
+
+@patch("cookiecutterassert.test_folder_executor.print")
+@patch('cookiecutterassert.assertion_file_parser.parseAssertionFile')
+@patch('os.path.isfile')
+@patch('cookiecutterassert.cookie_cutter_interface.generateFilesFromTemplate')
+def test_executeAllTestsInFolder_shouldParseAndExecuteRulesIfIgnoreIsFalse(mockGenerateFilesFromTemplate, mockIsfile, mockAssertionFileParser, printMock, ignoreFalseRuleList):
+    templateFolder = "templateFolder"
+    testFolder = "testFolder"
+    expectedOutputFolder = testFolder+"/build"
+    expectedAssertionFile = testFolder+"/assertions.yaml"
+    mockIsfile.side_effect = isConfigYamlOrAssertionsYaml
+    mockAssertionFileParser.return_value = ignoreFalseRuleList
+
+    actualResult = test_folder_executor.executeAllTestsInFolder(templateFolder, testFolder, cli_options)
+
+    mockAssertionFileParser.assert_called_once_with(expectedAssertionFile, testFolder, cli_options)
+    assert actualResult == True
+    assert ignoreFalseRuleList[0].executeCount == 1
+    assert ignoreFalseRuleList[0].outputFolder == expectedOutputFolder
+    assert ignoreFalseRuleList[1].executeCount == 1
+    assert ignoreFalseRuleList[1].outputFolder == expectedOutputFolder
