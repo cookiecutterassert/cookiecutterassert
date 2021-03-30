@@ -28,6 +28,7 @@ from cookiecutterassert import cookie_cutter_interface
 from cookiecutterassert import assertion_file_parser
 import os.path
 from cookiecutterassert import messager
+from cookiecutterassert.rules.option_names import IGNORE
 
 def getConfigFile(testFolder):
     configFile = testFolder+"/config.yaml"
@@ -53,12 +54,18 @@ def executeAllTestsInFolder(templateFolder, testFolder, cli_options):
     configFile = getConfigFile(testFolder)
     defaultConfigFile = getDefaultConfigFile(templateFolder)
     assertionsFile = getAssertionsFile(testFolder)
-    cookie_cutter_interface.generateFilesFromTemplate(templateFolder, configFile, outputFolder, defaultConfigFile)
     
     rules = assertion_file_parser.parseAssertionFile(assertionsFile, testFolder, cli_options)
     if (len(rules) == 0):
         messager.printError("ERROR: No assertions found in test folder: {}".format(testFolder))
         return False
+
+    options = rules[0].options
+    if (IGNORE in options and options[IGNORE]):
+        messager.printMessage('Skipping folder because ignore=true in assertion file options')
+        return True
+
+    cookie_cutter_interface.generateFilesFromTemplate(templateFolder, configFile, outputFolder, defaultConfigFile)    
 
     ruleResult = True
     for rule in rules:

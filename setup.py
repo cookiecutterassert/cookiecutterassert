@@ -50,7 +50,7 @@ setuptools.setup(
     description="Automated testing framework for python cookie cutter",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/micahtessler/cookiecutterassert",
+    url="https://github.com/cookiecutterassert/cookiecutterassert",
     packages=setuptools.find_packages(exclude=['test', 'test.*', '*.test.*', 'test.rules']),
     install_requires=requirements,
     classifiers=[

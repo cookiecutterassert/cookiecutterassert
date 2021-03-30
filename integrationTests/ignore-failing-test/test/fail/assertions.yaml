@@ -1,0 +1,4 @@
+options:
+  ignore: true
+assertions:
+  - fileMatches MyApp/foo expectedFoo
