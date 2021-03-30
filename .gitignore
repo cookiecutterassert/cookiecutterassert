@@ -71,3 +71,4 @@ venv.bak/
 
 build.info
 integrationTests/*/actual-cookiecutterassert-output.txt
+!example/staleTests/stale/build
