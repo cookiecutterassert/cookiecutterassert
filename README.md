@@ -36,6 +36,8 @@ As each test scenario executes, you will see `---Starting tests for {SCENARIO FO
 * `--templatefolder` Specifies the location of the cookiecutter project.  defaults to `.`
 * `test_name` A positional argument specifying a single test folder name to run in the test suite
 
+specifying a single test is useful when iterating on test development, similar to fdescribe or fit in mocha or jasmine
+
 ## Usage
 ```
 Usage: runIntegrationTest.py [OPTIONS] [SPECIFIC_TEST_FOLDER]
@@ -142,7 +144,7 @@ assertions:
   * Passes if the generated file does not have all of the lines of the snippet file in order
 
 ## Assertion file options
-You may put options on the command line or in the assertion file.
+You may put options on the command line or in the assertion file, but some options are only available in assertion files
 for example:
 ```
 options:
@@ -152,7 +154,12 @@ assertions:
 ```
 In this case, the visible-whitespace enabled by default for rules in this assertion file
 
-Assertion file options are always overridden by command line options
+Assertion file options are always overridden by command line options where available
+
+### List of assertion file options
+* `visible-whitespace` Same as the CLI option
+* `ignore` Set to true to have cookiecuttterassert not evaluate the test folder
+
 
 ## Developing cookiecutterassert
 see [Development guide](Development.md)
