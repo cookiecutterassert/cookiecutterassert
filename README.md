@@ -34,6 +34,24 @@ As each test scenario executes, you will see `---Starting tests for {SCENARIO FO
 * `--visible-whitespace` makes common whitespace characters visible in the output of fileMatches rule
 * `-vw` same as --visible-whitespace
 * `--templatefolder` Specifies the location of the cookiecutter project.  defaults to `.`
+* `test_name` A positional argument specifying a single test folder name to run in the test suite
+
+## Usage
+```
+Usage: runIntegrationTest.py [OPTIONS] [SPECIFIC_TEST_FOLDER]
+
+  Runs all test folders in the test directory or a single specific test
+  folder if specified
+
+Options:
+  --templatefolder TEXT      path of cookiecutter project directory, defaults
+                             to .
+
+  -vw, --visible-whitespace  make whitespace visble with symbols in place of
+                             common whitespace characters
+
+  --help                     Show this message and exit.
+```
 
 ## Setting up a cookiecutter assert project
 See [example](https://github.com/cookiecutterassert/cookiecutterassert-example)
