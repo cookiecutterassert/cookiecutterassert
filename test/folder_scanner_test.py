@@ -37,7 +37,25 @@ def test_findAllTestFolders_shouldReturnAListOfAllFoldersThatHaveTestConfigs():
     test1Path = fixturePath.joinpath("otherFolder").joinpath("test1")
     test2Path = fixturePath.joinpath("otherFolder").joinpath("test2")
     
-    expected = {str(test0Path), str(test1Path), str(test2Path)}
+    expected = [str(test0Path), str(test1Path), str(test2Path)]
+    actual = folder_scanner.findAllTestFolders(str(fixturePath))
+
+    assert actual == expected
+
+
+def addFoldersOutOfOrder(testFolderSet, folderPath):
+    testFolderSet.append("folder1")
+    testFolderSet.append("folder3")
+    testFolderSet.append("folder2")
+
+
+@patch('cookiecutterassert.folder_scanner.recurseAddTestFolders')
+def test_findAllTestFolders_shouldReturnAListOfAllFoldersThatHaveTestConfigs(mockRecurseAddTestFolders):
+    testFolder = os.path.dirname(os.path.abspath(__file__))
+    fixturePath = Path(testFolder).parent.joinpath("example").joinpath("dirTreeWithTests")
+    mockRecurseAddTestFolders.side_effect = addFoldersOutOfOrder
+
+    expected = ["folder1", "folder2", "folder3"]
     actual = folder_scanner.findAllTestFolders(str(fixturePath))
 
     assert actual == expected

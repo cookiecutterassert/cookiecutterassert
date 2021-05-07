@@ -82,4 +82,5 @@ execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/case-sensitive-file-matches
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/run-specific-test-success success
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/ignore-failing-test
+execute_test_expected_output 1 ./integrationTests/test-count pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/test-count
 echo "All Integration Tests PASSED!!!!!"

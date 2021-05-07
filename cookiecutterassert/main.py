@@ -46,16 +46,12 @@ def runAllTests(templatefolder, visible_whitespace, specific_test_folder):
     success = True
     cli_options = create_cli_options(visible_whitespace)
     try :
-        printMessage('Running all tests in %s' % templatefolder)
         success = _run_tests(templatefolder, specific_test_folder, cli_options)
     except:
         printError(traceback.format_exc())
         sys.exit(-1)
-    
-    if (success):
-        printSuccess('All tests passed')
-    else :  # non-zero exit code to indicate failure
-        printError('There were failing tests')
+
+    if (not success):
         sys.exit(1)
 
 if __name__ == '__main__':
