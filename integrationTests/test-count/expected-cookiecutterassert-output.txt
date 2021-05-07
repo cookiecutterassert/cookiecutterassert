@@ -1,0 +1,15 @@
+Running all tests in ./integrationTests/test-count
+---Starting tests for integrationTests/test-count/test/fail1
+assertion fileMatches MyApp/example-file expected-example-file failed.  Files differ
+--- integrationTests/test-count/test/fail1/build/MyApp/example-file
+
++++ integrationTests/test-count/test/fail1/expected-example-file
+
+@@ -1,2 +1,2 @@
+
+-foo
++bar
+ 
+---Starting tests for integrationTests/test-count/test/pass0
+---Starting tests for integrationTests/test-count/test/pass2
+There were 1 failing and 2 passing tests
