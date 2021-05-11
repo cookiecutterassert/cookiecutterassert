@@ -49,14 +49,15 @@ def isConfigFile(fileName):
 
 def recurseAddTestFolders(testFolderSet, folderPath):
     if (isTestFolder(str(folderPath))):
-        testFolderSet.add(str(folderPath))
+        testFolderSet.append(str(folderPath))
     else:
         for child in folderPath.iterdir():
             if (child.is_dir()):
                 recurseAddTestFolders(testFolderSet, child)
 
 def findAllTestFolders(parentFolder):
-    testFolderSet = set()
+    testFolderSet = []
     parentPath = Path(parentFolder)
     recurseAddTestFolders(testFolderSet, parentPath)
+    testFolderSet.sort()
     return testFolderSet

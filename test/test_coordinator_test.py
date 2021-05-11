@@ -32,7 +32,7 @@ import pytest
 
 
 folderAName = 'folderA'
-folderBName = 'folderA'
+folderBName = 'folderB'
 
 rootFolder='./testFolder'
 rootTestFolder = rootFolder+'/test'
@@ -44,25 +44,28 @@ cli_options = {"someoption": True}
 
 @pytest.fixture
 def testFolderSet():
-    folderSet = set()
-    folderSet.add(testFolderA)
-    folderSet.add(testFolderB)
+    folderSet = []
+    folderSet.append(testFolderA)
+    folderSet.append(testFolderB)
     return folderSet
 
 def failTestA(templateFolder, testFolder, cli_options):
     return testFolder != testFolderA
 
-def rootTestTolderDoesNotExist(folder_path):
+def rootTestFolderDoesNotExist(folder_path):
     return folder_path != rootTestFolder
 
 def folderADoesNotExist(folder_path):
     return folder_path != testFolderA
 
+@patch('cookiecutterassert.messager.printError')
+@patch('cookiecutterassert.messager.printSuccess')
+@patch('cookiecutterassert.messager.printMessage')
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
 @patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
-def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, mockPrintMessage, mockPrintSuccess, mockPrintError, testFolderSet):
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True
@@ -73,13 +76,19 @@ def test_runAllTestsInAllFolders_shouldScanAllFoldersAndExecuteTests(mock_delete
     mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderA, cli_options)
     mockExecuteAllTestsInFolder.assert_any_call(rootFolder, testFolderB, cli_options)
     mock_delete_stale_test_folders.assert_called_once_with(rootTestFolder)
+    mockPrintMessage.assert_called_with(f'Running all tests in {rootFolder}')
+    mockPrintSuccess.assert_called_with('2 tests passed')
+    mockPrintError.assert_not_called()
     assert actualResult == True
 
+
+@patch('cookiecutterassert.messager.printError')
+@patch('cookiecutterassert.messager.printSuccess')
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 @patch('cookiecutterassert.folder_scanner.findAllTestFolders')
 @patch('cookiecutterassert.stale_test_folder_cleanup.delete_stale_test_folders')
-def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mock_delete_stale_test_folders, mockFindAllTestFolders, mockExecuteAllTestsInFolder, mockIsDir,  mockPrintSuccess, mockPrintError, testFolderSet):
     mockFindAllTestFolders.return_value = testFolderSet
     mockExecuteAllTestsInFolder.side_effect = failTestA
     mockIsDir.return_value = True
@@ -87,6 +96,9 @@ def test_runAllTestsInAllFolders_shouldReturnFalseIfAnyFolderFails(mock_delete_s
     actualResult = test_coordinator.runAllTestsInAllFolders(rootFolder, cli_options)
 
     assert actualResult == False
+    mockPrintSuccess.assert_not_called()
+    mockPrintError.assert_called_with('There were 1 failing and 1 passing tests')
+
 
 @patch('cookiecutterassert.messager.printError')
 @patch('os.path.isdir')
@@ -117,9 +129,14 @@ def test_runAllTestsInAllFolders_should_return_false_if_no_test_cases(mock_delet
     assert actualResult == False
     mockPrintError.assert_called_with(f'No test cases found. Expecting to find one or more subdirectories in {rootTestFolder} with valid config.yaml and assertions.yaml files')
 
+
+@patch('cookiecutterassert.messager.printError')
+@patch('cookiecutterassert.messager.printSuccess')
+@patch('cookiecutterassert.messager.printMessage')
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
-def test_runSpecificTestFolder_shouldExecuteTests(mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+def test_runSpecificTestFolder_shouldExecuteTests(mockExecuteAllTestsInFolder, mockIsDir, mockPrintMessage, mockPrintSuccess, mockPrintError, testFolderSet):
+
     mockExecuteAllTestsInFolder.return_value = True
     mockIsDir.return_value = True
 
@@ -127,10 +144,15 @@ def test_runSpecificTestFolder_shouldExecuteTests(mockExecuteAllTestsInFolder, m
     
     mockExecuteAllTestsInFolder.assert_called_with(rootFolder, testFolderA, cli_options)
     assert actualResult == True
+    mockPrintMessage.assert_called_with(f'running test {folderAName} in {rootFolder}')
+    mockPrintSuccess.assert_called_with('1 tests passed')
+    mockPrintError.assert_not_called()
 
+@patch('cookiecutterassert.messager.printError')
+@patch('cookiecutterassert.messager.printSuccess')
 @patch('os.path.isdir')
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
-def test_runSpecificTestFolder_shouldReturnFalseIfFolderFails(mockExecuteAllTestsInFolder, mockIsDir, testFolderSet):
+def test_runSpecificTestFolder_shouldReturnFalseIfFolderFails(mockExecuteAllTestsInFolder, mockIsDir, mockPrintSuccess, mockPrintError, testFolderSet):
     mockExecuteAllTestsInFolder.return_value = False
     mockIsDir.return_value = True
 
@@ -138,6 +160,8 @@ def test_runSpecificTestFolder_shouldReturnFalseIfFolderFails(mockExecuteAllTest
     
     mockExecuteAllTestsInFolder.assert_called_with(rootFolder, testFolderA, cli_options)
     assert actualResult == False
+    mockPrintSuccess.assert_not_called()
+    mockPrintError.assert_called_with('There were 1 failing and 0 passing tests')
 
 
 @patch('cookiecutterassert.messager.printError')
@@ -145,7 +169,7 @@ def test_runSpecificTestFolder_shouldReturnFalseIfFolderFails(mockExecuteAllTest
 @patch('cookiecutterassert.test_folder_executor.executeAllTestsInFolder')
 def test_runSpecificTestFolder_shouldReturnFalseIfTestFolderDoesNotExit(mockExecuteAllTestsInFolder, mockIsDir, mockPrintError, testFolderSet):
     mockExecuteAllTestsInFolder.return_value = False
-    mockIsDir.side_effect = rootTestTolderDoesNotExist
+    mockIsDir.side_effect = rootTestFolderDoesNotExist
 
     actualResult = test_coordinator.runSpecificTestFolder(rootFolder, folderAName, cli_options)
     

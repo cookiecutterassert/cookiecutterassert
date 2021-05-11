@@ -11,4 +11,4 @@ assertion fileMatches MyApp/file-with-spaces expected-file-with-spaces failed.  
 -foo•is•bar¶
 +•foo••is••bar••¶
  other•••line
-There were failing tests
+There were 1 failing and 0 passing tests

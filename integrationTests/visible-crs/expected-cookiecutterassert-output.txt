@@ -13,4 +13,4 @@ assertion fileMatches MyApp/file-with-crs expected-file-with-crs failed.  Files 
 +line2↵¶
  line3¶
  
-There were failing tests
+There were 1 failing and 0 passing tests
