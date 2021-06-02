@@ -53,6 +53,8 @@ def parseAssertionFile(assertionFile, testFolder, cli_options):
         if ('options' in assertionData):
             options = assertionData['options']
         options.update(cli_options)
+        if ('assertions' not in assertionData):
+            return []
         for ruleString in assertionData["assertions"]:
             tokens = ruleString.split()
             if (tokens[0] == "pathExists"):

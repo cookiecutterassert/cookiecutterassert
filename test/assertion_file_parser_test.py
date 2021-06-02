@@ -153,3 +153,11 @@ def test_parseAssertionFile_clie_options_should_override_assertion_file():
     actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), cli_options)
 
     assert expectedRules == actualRules
+
+def test_parseAssertionFile_shouldNotCrashIfNoAssertionsLineInYaml():
+    currentFolder = os.path.dirname(os.path.abspath(__file__))
+    testFolder = Path(currentFolder).parent.joinpath("example")
+    assertionFile = testFolder.joinpath("assertion-file-without-assertions.yaml")
+    cli_options = {}
+    actualRules = assertion_file_parser.parseAssertionFile(str(assertionFile), str(testFolder), cli_options)
+    assert len(actualRules) == 0
