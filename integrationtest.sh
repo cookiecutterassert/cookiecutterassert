@@ -84,4 +84,6 @@ execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integr
 execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/ignore-failing-test
 execute_test_expected_output 1 ./integrationTests/test-count pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/test-count
 execute_test 1 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/malformed-assertions-yaml
+execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/allow-templates-in-context
+execute_test 0 pipenv run python runIntegrationTest.py --templatefolder ./integrationTests/non-string-variable-convert-to-string
 echo "All Integration Tests PASSED!!!!!"

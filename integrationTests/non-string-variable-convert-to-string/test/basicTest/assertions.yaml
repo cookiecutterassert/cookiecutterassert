@@ -1,0 +1,2 @@
+assertions:
+  - fileMatches MyApp/README.md expectedREADME.md
