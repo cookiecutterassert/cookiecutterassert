@@ -1,6 +1,5 @@
 # Copyright 2020 Ford Motor Company 
 
- 
 
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 
@@ -8,11 +7,9 @@
 
 # You may obtain a copy of the License at 
 
- 
 
 #     http://www.apache.org/licenses/LICENSE-2.0 
 
- 
 
 # Unless required by applicable law or agreed to in writing, software 
 
@@ -24,36 +21,41 @@
 
 # limitations under the License. 
 
-from cookiecutter import generate
+from cookiecutter.main import cookiecutter
 import yaml
 import shutil
 import os
 
-def loadYamlFile(yamlFile):
-    if (os.path.exists(yamlFile)):
-        with open(yamlFile, 'r') as yamlConfigFile:
-            loadedContext = yaml.load(yamlConfigFile, Loader=yaml.FullLoader)
-            if (loadedContext is None 
-                or len(loadedContext) == 0
-                or loadedContext['default_context'] is None):
-                return {'default_context': {} }
-            return loadedContext
-    return {'default_context': {} }
 
-def loadCookieCutterContext(configfile, defaultConfigFile):
-    cookiecutterContext = {}
-    context = {}
-    cookiecutterContext['cookiecutter'] = loadYamlFile(defaultConfigFile)['default_context']
-    cookiecutterContext['cookiecutter'].update(loadYamlFile(configfile)['default_context'])
-    return cookiecutterContext
+def load_yaml_file(yaml_file):
+    if os.path.exists(yaml_file):
+        with open(yaml_file, 'r') as yamlConfigFile:
+            loaded_context = yaml.load(yamlConfigFile, Loader=yaml.FullLoader)
+            if (loaded_context is None
+                    or len(loaded_context) == 0
+                    or loaded_context['default_context'] is None):
+                return {'default_context': {}}
+            return loaded_context
+    return {'default_context': {}}
 
 
-def eraseFolder(folder):
-    if (os.path.exists(folder)):
+def load_cookiecutter_context(config_file, default_config_file):
+    cookiecutter_context = load_yaml_file(default_config_file)['default_context']
+    cookiecutter_context.update(load_yaml_file(config_file)['default_context'])
+    return cookiecutter_context
+
+
+def erase_folder(folder):
+    if os.path.exists(folder):
         shutil.rmtree(folder)
     os.mkdir(folder)
 
-def generateFilesFromTemplate(template, configfile, output, defaultConfigFile):
-    cookiecutterContext = loadCookieCutterContext(configfile, defaultConfigFile)
-    eraseFolder(output)
-    generate.generate_files(repo_dir=template, context=cookiecutterContext, output_dir=output)
+
+def generateFilesFromTemplate(template, config_file, output, default_config_file):
+    cookiecutter_context = load_cookiecutter_context(config_file, default_config_file)
+    erase_folder(output)
+    cookiecutter(template=template,
+                 no_input=True,
+                 overwrite_if_exists=True,
+                 extra_context=cookiecutter_context,
+                 output_dir=output)

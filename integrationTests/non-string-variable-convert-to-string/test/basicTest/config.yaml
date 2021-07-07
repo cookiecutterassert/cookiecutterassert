@@ -1,0 +1,4 @@
+default_context:
+  project_name: "MyApp"
+  app_name: "given_app_name"
+  boolean: true

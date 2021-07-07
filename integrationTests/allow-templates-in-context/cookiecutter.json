@@ -1,0 +1,5 @@
+{
+  "project_name": "",
+  "project_name_lower": "{{cookiecutter.project_name | lower }}",
+  "app_name": ""
+}
