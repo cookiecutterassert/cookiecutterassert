@@ -1,2 +1,2 @@
 assertions:
-  - pathExists myapp/README.MD
+  - pathExists myapp/README.md
