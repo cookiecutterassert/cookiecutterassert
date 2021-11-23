@@ -20,6 +20,9 @@ Cookie Cutter Assert was originally developed at Ford Motor Company to facilitat
 ### Install command
 `pipx install cookiecutterassert`
 
+### Upgrade to latest command
+`pipx upgrade cookiecutterassert`
+
 ## Executing tests
 go to the root of your cookiecutter project and run `cookiecutterassert`
 If all tests pass, the return code is 0 and you will see `All tests passed`
